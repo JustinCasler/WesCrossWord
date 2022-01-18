@@ -1,79 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head> 
+<head>
+<title>Cross word Puzzel</title>
+<link rel="stylesheet" href="gamestyles.css" />
 
-        <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
-        <title>Monday Mini</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Suranna&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Yeseva+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://use.typekit.net/div0nxt.css">
-    </head>
+</head>
+<body onload="initializeScreen()">
+	<script src="puzzle.js"></script>
+	<div>
+		<h1><b></b>The Wesleyan Crossword Mini</style><b></b></h1>
+		<br>
+		<hr>
+		
+	</div>
+<div id="leftBox">
+<table id="puzzel">
+</table>
+</div>
+<div id="rightBox">
+<table>
+	<tr><td><input class="butt"  type="submit" value="Clear All" onclick="clearAllClicked()"></td>
+	<td><input class="butt"  type="submit" value="Check" onclick="checkClicked()"></td>
+	<td><input class="butt"  type="submit" value="Solve" onclick="solveClicked()"></td>
+	<td><input class="butt"  type="submit" value="Clue" onclick="clueClicked()"></td></tr>
+</table>
+</div>
+<table id="hintsTable">
+		<tr>
+			<td><strong>Horizontal:</strong></td><td><strong>Vertical:</strong></td>
+		</tr>
+		<tr>
+			<td>3. Cultural Hub (Hyderabad)</td><td>1. Education Hub (Pune)</td>
+		</tr>
+		<tr>
+			<td>5. India's financial capital (Mumbai)</td><td>2. Information Technology Hub (Bangalore)</td>
+		</tr>
+		<tr>
+			<td>6. Saffron region (Kashmir)</td><td>4. Capital of India (Delhi)</td>
+</table>
 
-    <body> 
-        <section class="header">
-            <nav>
-                <a href="StylePractice.html"><img src="WesleyanLogo.png" ></a>
-                <div class= "nav-links" id="navLinks">
-                    <i class="fa fa-times" onclick="hideMenu()" ></i>
-                    <ul>
-                        <li> <a href="">Home</a> </li>
-                        <li> <a href="">Archive</a> </li>
-                        <li> <a href="">User</a> </li>
-                        <li> <a href="">Login</a> </li>
-                    </ul>
-                </div>
-                <i class="fa fa-bars" onclick="showMenu()"></i>
-            </nav>
-
-            <div class=text-box>
-                <h1>Monday Mini</h1>
-                <ul>
-                    <li>By Will Hardison 1/14/2022</li>
-                </ul>
-                
-            </div>
-
-            <nav>
-                <div class="toolbar">
-                    <ul>
-                        <li class="timer">0:45 </li>
-                        <li> <a href="" class="check-button">Check</a>  </li>
-                        <li> <a href="" class="pencil-button">Pencil</a> </li>
-                        <li> <a href="" class="reveal-button">Reveal</a> </li>
-                        <li> <a href="" class="reset-button">Reset</a> </li>
-                        <li> <a href="" class="clear-button">Clear</a> </li>
-                    </ul>
-                </div>
-            </nav>
-        
-        </section>
-
-        
-        <!------ JavaScript for Toggle menu-------->
-        <script>
-           var navLinks = document.getElementById("navLinks");
-           function showMenu(){
-               navLinks.style.right = "0px";
-           }
-           function hideMenu(){
-               navLinks.style.right = "-200px";
-           }
-        </script>
-       <!------ JavaScript for Timer-------->
-        <script>
-
-        </script>
-
-
-    </body>
-
-    
-
+</body>
 </html>

@@ -96,11 +96,11 @@ function textInputFocus(txtID123){
 }
 //Returns Array
 function preparePuzzelArray(){
-var items = [	['j', 'h', 'y', 'd', 'e'],
-				['j', 'h', 'y', 'd', 'e'],
-				['j', 'h', 'y', 'd', 'e'],
-				['j', 'h', 'y', 'd', 'e'],
-				['j', 'h', 'y', 'd', 'e'],
+	var items = [['0', 's', 'h', 'e', '0'],
+				['t', 'h', 'a', 't', 's'],
+				['t', 'o', 't', 'e', 's'],
+				['s', 'w', 'e', 'a', 't'],
+				['0', 's', 'r', 's', '0'],
 			];
 return items;
 }
@@ -113,16 +113,19 @@ function clearAllClicked(){
 }
 //Check button
 function checkClicked(){
+    
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-				if(selectedInputTextElement.value != puzzelArrayData[i][j]){
-					selectedInputTextElement.style.backgroundColor = 'red';
+					if(selectedInputTextElement.value != puzzelArrayData[i][j]){
+						selectedInputTextElement.style.backgroundColor = "#ff8686";
+
 					
-				}else{
-					selectedInputTextElement.style.backgroundColor = 'white';
+					}else{
+						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
+						
 				}
 			}
 		}
@@ -176,6 +179,19 @@ function solveClicked(){
 		
 	}
 }
+
+
+
+
+/*side Menu*/	
+function showMenu(){
+	var navLinks = document.getElementById("navLinks");
+    navLinks.style.right = "0px";
+           }
+function hideMenu(){
+	var navLinks = document.getElementById("navLinks");
+    navLinks.style.right = "-200px";
+           }
 /* 					switch(i+','+j){
 					case('0,0'):
 						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';

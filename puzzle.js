@@ -1,6 +1,10 @@
 //Globals
 var currentTextInput;
 var puzzelArrayData;
+var squaresSelected = [];
+
+// true = down, false = across
+var downOrAcross = false;
 
 //Loads the Crossword
 function initializeScreen(){
@@ -10,50 +14,170 @@ function initializeScreen(){
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
-		if (i < puzzelArrayData.length -1)
+		if (i < puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[i+1]
+		}
+		if (i == puzzelArrayData.length -1){
+			var nextRowData = puzzelArrayData[0]
+		}
 		for(var j = 0 ; j < rowData.length ; j++){
 			var cell = row.insertCell(-1);
 			if(rowData[j] != 0){
+				var colData = [];
+				var nextColData = [];
+				if(j < rowData.length -1){
+					for(var k = 0; k < rowData.length; k++){
+					colData.push(puzzelArrayData[k][j]);
+					nextColData.push(puzzelArrayData[k][j+1]);
+					}
+				}
+				if(j == rowData.length -1){
+					for(var k = 0; k < nextRowData.length; k++){
+						colData.push(puzzelArrayData[k][j]);
+						nextColData.push(puzzelArrayData[k][0]);
+					}
+				}
+			
+		
 				var txtID = String('txt' + '_' + i + '_' + j);
-				if(j != rowData.length - 1){
-					if(rowData[j+1] != 0) 
-						var newTxtID = String('txt' + '_' + i + '_' + (j+1));
-					else if(j != 3){
-						if(rowData[j+2] != 0)
-							var newTxtID = String('txt' + '_' + i + '_' + (j+2));
-					}
-					else{ 
-						if(nextRowData[0] != 0){
-							var newTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-						}
-						else if (nextRowData[1] != 0)
-							var newTxtID = String('txt' + '_' + (i+1) + '_' + 1);
-					}
-				}	
-				else if(j == rowData.length - 1){
-					if(nextRowData[0] != 0){
-						var newTxtID = String('txt' + '_' + (i+1) + '_' + 0);
-					}
-					else if(nextRowData[1] != 0){
-						var newTxtID = String('txt' + '_' + (i+1) + '_' + 1);
-					}
-				}	
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquare(\'' + txtID + '\')" onkeyup= "moveCursor(this, \'' + newTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-
+				var rowcol = String(i) + String(j);
+				var newColTxtID = getColTxt(i, j, colData, nextColData);
+				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
-			else{cell.style.background = "black";}			
+			else{cell.style.background = "black";}	
 		}
+				
+		
 	}
 	addHint();
 }
-function moveCursor(fromTextBox, toTextBox){
+
+
+// get the next square across
+function getRowTxt(i,j, rowData, nextRowData){
+	if(j != rowData.length - 1){
+		if(rowData[j+1] != 0) 
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j+1));
+		else if(j != rowData.length - 2){
+			if(rowData[j+2] != 0) 
+				var newRowTxtID = String('txt' + '_' + i + '_' + (j+2));
+		}
+		else{ 
+			if(nextRowData[0] != 0){
+				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + (0));
+			}
+			else if (nextRowData[1] != 0)
+				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+		}
+	}	
+	else if(j == rowData.length - 1){
+		if(nextRowData[0] != 0){
+			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 0);
+		}
+		else if(nextRowData[1] != 0){
+			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+		}
+	}	
+	return newRowTxtID;
+
+}
+
+// get the next square down
+function getColTxt(i, j, colData, nextColData){
+	if(i != colData.length -1){
+		if(colData[i+1] != 0){
+			var newColTxtID = String('txt' + '_' + (i+1) + '_' + (j));
+			console.log(i,j,newColTxtID);
+		}
+		else if(i != colData.length -2){
+			if(colData[i+2] != 0 ){
+				var newColTxtID = String('txt' + '_' + (i+2) + '_' + (j));
+				console.log(i,j,newColTxtID);
+			}
+
+			else if(i != colData.length -3){
+				if(colData[i+3] != 0){
+					var newColTxtID = String('txt' + '_' + (i+3) + '_' + (j));
+					console.log(i,j,newColTxtID);
+				}
+			}
+		}
+		else if(i == colData.length -2){
+			if(nextColData[0] != 0){
+				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
+				console.log(i,j,newColTxtID);
+			}
+			else if(nextColData[1] != 0){
+				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
+				console.log(i,j,newColTxtID);
+			}
+		}
+	}
+	else if(i == colData.length -1){
+		if(j < colData.length -1){
+			if(nextColData[0] != 0){
+				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
+				console.log(i,j,newColTxtID);
+			}
+			else if(nextColData[1] != 0){
+				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
+				console.log(i,j,newColTxtID);
+			}
+		}
+		else if(j == colData.length -1){
+			if(nextColData[0] != 0){
+				var newColTxtID = String('txt' + '_' + (i+1) + '_' + (0));
+				console.log(i,j,newColTxtID);
+			}
+		}
+		
+	}
+	else if(nextColData[1] != 0){
+		var newColTxtID = String('txt' + '_' + (i) + '_' + (1));
+		console.log(i,j,newColTxtID);
+
+	}		
+	else{
+		var newColTxtID = String('txt' + '_' + (i) + '_' + (2));
+		console.log(newColTxtID);
+		}
+	
+	return newColTxtID;
+
+}
+
+//goes to the next square
+function moveCursor(fromTextBox, newRowBox, newColBox){
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
-	if (length == maxLength){
-		document.getElementById(toTextBox).focus()
+	if(downOrAcross == false){
+		if (length == maxLength){
+			document.getElementById(newRowBox).focus();
+		}
+		rowcol = newRowBox[4] + newRowBox[6];
+		highlightSquares(rowcol, newRowBox);
+
 	}
-	highlightSquare(toTextBox);
+	else if(downOrAcross == true){
+		if (length == maxLength){
+			document.getElementById(newColBox).focus();
+		}
+		rowcol = newColBox[4] + newColBox[6];
+		highlightSquares(rowcol, newColBox);
+	}
+	updateDownOrAcross();
+}
+
+// switches downOrAcross
+function updateDownOrAcross(){
+	if (downOrAcross == true){
+		downOrAcross = false;
+	}
+	else{
+		downOrAcross = true;
+	}
+	console.log(downOrAcross);
 }
 
 //Adds the hint numbers
@@ -86,30 +210,59 @@ function clearAllClicked(){
 	puzzelTable.innerHTML = '';
     initializeScreen();
 }
-var squareSelected =[];
 
-//Highlight the selected square
-function highlightSquare(squareID){
-	if(squareSelected.length != 0){
-		if(squareSelected[0] != squareID){
-			var pastSelectedSquare = document.getElementById(squareSelected[0]);
-			pastSelectedSquare.style.background = "white";
-			squareSelected.pop();
-			squareSelected.push(squareID);
-			var selectedSquare = document.getElementById(squareID);
-			selectedSquare.style.background = "#FFCA55";
+
+
+
+//Highlight the selected squares and row/column
+function highlightSquares(rowcol, squareID){
+	if(squaresSelected.length != 0){
+	
+		for(t = 0; t < squaresSelected.length; t++){
+			var box = document.getElementById(squaresSelected[t]);
+			box.style.background = "white";
+		}
+		for(t = 0; t < squaresSelected.length; t++){
+			squaresSelected.pop();
+		}
+		
+	}
+	var col = rowcol[1];
+	var row = rowcol[0];
+	var fullPuzzle = preparePuzzelArray();
+	var rowData = fullPuzzle[row];
+	var colData = [];
+	for(var i = 0; i < rowData.length; i++){
+		colData.push(fullPuzzle[i][col]);
+	}
+	if(downOrAcross == true){
+		for(var l = 0; l < rowData.length; l++){
+			if (rowData[l] != 0){
+				var txtID = String('txt' + '_' + row + '_' + l)
+				var selectedSquare = document.getElementById(txtID);
+				selectedSquare.style.background = "#b3f1ff";
+				squaresSelected.push(txtID);
+			}
+
 		}
 	}
-	else{
-		squareSelected.push(squareID);
-		var selectedSquare = document.getElementById(squareID);
-		selectedSquare.style.background = "#FFCA55";
+	else if(downOrAcross == false){
+		for(var l = 0; l < colData.length; l++){
+			if (colData[l] != 0){
+				var txtID = String('txt' + '_' + l + '_' + col)
+				var selectedSquare = document.getElementById(txtID);
+				selectedSquare.style.background = "#b3f1ff";
+				squaresSelected.push(txtID);
+			}
+
+		}
+
+
 	}
+	var selectedSquare = document.getElementById(squareID);
+	selectedSquare.style.background = "#FFCA55";
 
-	
 }
-
-
 
 //Check button
 function checkClicked(){

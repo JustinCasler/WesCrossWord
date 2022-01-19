@@ -39,7 +39,7 @@ function initializeScreen(){
 						var newTxtID = String('txt' + '_' + (i+1) + '_' + 1);
 					}
 				}	
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'' + newTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquare(\'' + txtID + '\')" onkeyup= "moveCursor(this, \'' + newTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
 
 			}
 			else{cell.style.background = "black";}			
@@ -85,6 +85,30 @@ function clearAllClicked(){
 	puzzelTable.innerHTML = '';
     initializeScreen();
 }
+var squareSelected =[];
+
+//Highlight the selected square
+function highlightSquare(squareID){
+	if(squareSelected.length != 0){
+		if(squareSelected[0] != squareID){
+			var pastSelectedSquare = document.getElementById(squareSelected[0]);
+			pastSelectedSquare.style.background = "white";
+			squareSelected.pop();
+			squareSelected.push(squareID);
+			var selectedSquare = document.getElementById(squareID);
+			selectedSquare.style.background = "#FFCA55";
+		}
+	}
+	else{
+		squareSelected.push(squareID);
+		var selectedSquare = document.getElementById(squareID);
+		selectedSquare.style.background = "#FFCA55";
+	}
+
+}
+
+	v
+
 //Check button
 function checkClicked(){
     

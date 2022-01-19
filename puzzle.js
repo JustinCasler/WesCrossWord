@@ -9,66 +9,40 @@ function initializeScreen(){
 
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
-		var rowData = puzzelArrayData[i];
+		var rowData = puzzelArrayData[i]
+		if (i < puzzelArrayData.length -1)
+			var nextRowData = puzzelArrayData[i+1]
 		for(var j = 0 ; j < rowData.length ; j++){
 			var cell = row.insertCell(-1);
 			if(rowData[j] != 0){
 				var txtID = String('txt' + '_' + i + '_' + j);
-				
-				if(i == 0 && j ==0)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 0 && j == 1)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_2\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 0 && j == 2)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_3\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 0 && j == 3)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 0 && j == 4)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_0\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 1 && j == 0)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_1\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 1 && j == 1)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_2\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 1 && j == 2)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_3\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 1 && j == 3)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 1 && j == 4)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_2_0\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 2 && j == 0)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_2_1\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 2 && j == 1)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_2_2\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 2 && j == 2)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_2_3\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 2 && j == 3)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_2_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 2 && j == 4)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_3_0\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 3 && j == 0)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_3_1\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 3 && j == 1)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_3_2\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 3 && j == 2)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_3_3\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 3 && j == 3)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_3_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 3 && j == 4)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_0\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 4 && j == 0)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_1\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 4 && j == 1)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_2\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 4 && j == 2)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_3\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 4 && j == 3)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				else if(i == 4 && j == 4)
-					cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_4_4\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-				}else{
-				cell.style.backgroundColor  = "black";
+				if(j != rowData.length - 1){
+					if(rowData[j+1] != 0) 
+						var newTxtID = String('txt' + '_' + i + '_' + (j+1));
+					else if(j != 3){
+						if(rowData[j+2] != 0)
+							var newTxtID = String('txt' + '_' + i + '_' + (j+2));
+					}
+					else{ 
+						if(nextRowData[0] != 0){
+							var newTxtID = String('txt' + '_' + (i+1) + '_' + (0));
+						}
+						else if (nextRowData[1] != 0)
+							var newTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+					}
+				}	
+				else if(j == rowData.length - 1){
+					if(nextRowData[0] != 0){
+						var newTxtID = String('txt' + '_' + (i+1) + '_' + 0);
+					}
+					else if(nextRowData[1] != 0){
+						var newTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+					}
+				}	
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'' + newTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
+
 			}
-			
+			else{cell.style.background = "black";}			
 		}
 	}
 	addHint();

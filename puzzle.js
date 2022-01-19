@@ -53,6 +53,7 @@ function moveCursor(fromTextBox, toTextBox){
 	if (length == maxLength){
 		document.getElementById(toTextBox).focus()
 	}
+	highlightSquare(toTextBox);
 }
 
 //Adds the hint numbers
@@ -111,20 +112,27 @@ function highlightSquare(squareID){
 
 //Check button
 function checkClicked(){
-    
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-					if(selectedInputTextElement.value != puzzelArrayData[i][j]){
+					if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
 						selectedInputTextElement.style.backgroundColor = "#ff8686";
+					}
+					else if(selectedInputTextElement.value != ''){
+						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
+					}
+					else{
+						selectedInputTextElement.style.backgroundColor = "white";
+
+					}
 
 					
-					}else{
-						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
-						
-				}
+	
+					
+					
+				
 			}
 		}
 	}

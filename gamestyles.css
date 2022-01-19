@@ -22,6 +22,14 @@
 	outline: none;
 }
 
+input[type="text"]
+{
+    font-family: Source Sans Pro;
+	font-weight: bold;
+	font-size: 25px;
+	text-transform: capitalize;
+
+}
 .inputBox:hover{
 	background-color: #FFCA55;
 }

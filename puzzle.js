@@ -106,9 +106,10 @@ function highlightSquare(squareID){
 		selectedSquare.style.background = "#FFCA55";
 	}
 
+	
 }
 
-	v
+
 
 //Check button
 function checkClicked(){

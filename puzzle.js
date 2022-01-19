@@ -16,7 +16,7 @@ function initializeScreen(){
 		var rowData = puzzelArrayData[i]
 		if (i < puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[i+1]
-		}
+		} k
 		if (i == puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[0]
 		}

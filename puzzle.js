@@ -37,13 +37,40 @@ function initializeScreen(){
 						nextColData.push(puzzelArrayData[k][0]);
 					}
 				}
-			
-		
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				// setting up to call function based on key input
+				// Error: Cannot read properties of null (reading 'focus') -> problem with newRowTxtID
+				let inBox = document.getElementById(txtID)
+				if(inBox){
+					inBox.addEventListener("keydown", myFunction);
+				}
+				function myFunction(event, fromTextBox, newRowBox, newColBox) {
+
+				switch (event.key) {
+					case "ArrowDown":
+						console.log("ArrowDown");
+					break;
+					case "ArrowUp":
+						console.log("ArrowUp");
+					break;
+					case "ArrowLeft":
+						console.log("ArrowLeft");
+					break;
+					case "ArrowRight":
+						console.log("ArrowRight");
+						moveCursorIfBlank(this, newRowTxtID ,  newColTxtID)
+					break;
+					default:
+						console.log(event.key, event.keyCode);
+					return; 
+				}
+
+				event.preventDefault();
+				}
 			}
 			else{cell.style.background = "black";}	
 		}
@@ -168,6 +195,30 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 	}
 	updateDownOrAcross();
 }
+// duplicate moveCursor for arrow and backspace
+function moveCursorIfBlank(fromTextBox, newRowBox, newColBox){
+	console.log('working')
+	console.log('fromTextBox:',fromTextBox + ' newRowBox: ',newRowBox+' newColBox: '+newColBox)
+	let value = fromTextBox.value.trim()
+	
+	if(downOrAcross == false){
+		if (value.length == 0){
+
+			document.getElementById(newRowBox).focus();
+		}
+		rowcol = newRowBox[4] + newRowBox[6];
+	}
+	else if(downOrAcross == true){
+		if (value.length == 0){
+
+			document.getElementById(newColBox).focus();
+		}
+		rowcol = newColBox[4] + newColBox[6];
+		
+	}
+	updateDownOrAcross();
+}
+//goes back a square 
 
 // switches downOrAcross
 function updateDownOrAcross(){
@@ -352,80 +403,5 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
            }
-/* 					switch(i+','+j){
-					case('0,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('0,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_2\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_3\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_0\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('1,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-				}
-*/
+
 						

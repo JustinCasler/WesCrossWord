@@ -194,19 +194,35 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox){
 		if (event.keyCode == 39){
 			console.log('working right')
 			document.getElementById(newRowBox).focus();
+			rowcol = newRowBox[4] + newRowBox[6];
+			highlightSquares(rowcol, newRowBox);
 		}
-		highlightSquares(rowcol, newRowBox);
-		rowcol = newRowBox[4] + newRowBox[6];
 	}
 
 	else if(downOrAcross == true){
 		if (event.keyCode == 40){
 			console.log('working down')
 			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
 		}
-		rowcol = newColBox[4] + newColBox[6];
-		highlightSquares(rowcol, newRowBox);
 		}
+/*		
+	else if(downOrAcross == false){
+		if (event.keyCode == 37){
+			document.getElementById(newRowBox).focus();
+			rowcol = newRowBox[4] + newRowBox[6];
+			highlightSquares(rowcol, newRowBox)
+		}
+	}
+	else if(downOrAcross == true){
+		if(event.keyCode == 38){
+			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
+		}
+	}
+	*/
 	updateDownOrAcross();	
 	}
 	
@@ -237,7 +253,8 @@ function textInputFocus(txtID123){
 }
 //Returns Array
 function preparePuzzelArray(){
-	var items = [['0', 's', 'h', 'e', '0'],
+	var items = [
+				['0', 's', 'h', 'e', '0'],
 				['t', 'h', 'a', 't', 's'],
 				['t', 'o', 't', 'e', 's'],
 				['s', 'w', 'e', 'a', 't'],

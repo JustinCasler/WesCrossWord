@@ -2,21 +2,23 @@
 var currentTextInput;
 var puzzelArrayData;
 var squaresSelected = [];
-
 // true = down, false = across
 var downOrAcross = false;
+const timer = document.getElementById('stopwatch');
+const stopButton = document.getElementById('stop-button');
+const startButton = document.getElementById('play-button');
 
 //Loads the Crossword
 function initializeScreen(){
+	
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
-
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
 		if (i < puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[i+1]
-		} k
+		}
 		if (i == puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[0]
 		}
@@ -37,21 +39,26 @@ function initializeScreen(){
 						nextColData.push(puzzelArrayData[k][0]);
 					}
 				}
-			
-		
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+
+				 	rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + 
+					newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + 
+					txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
 			else{cell.style.background = "black";}	
 		}
 				
 		
 	}
+	
 	addHint();
+	startTimer();
 }
+
+
 
 
 // get the next square across
@@ -212,15 +219,12 @@ function clearAllClicked(){
 }
 
 
-
-
 //Highlight the selected squares and row/column
 function highlightSquares(rowcol, squareID){
 	if(squaresSelected.length != 0){
-	
 		for(t = 0; t < squaresSelected.length; t++){
 			var box = document.getElementById(squaresSelected[t]);
-			box.style.background = "white";
+			box.style.background = "none";
 		}
 		for(t = 0; t < squaresSelected.length; t++){
 			squaresSelected.pop();
@@ -278,7 +282,7 @@ function checkClicked(){
 						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
 					}
 					else{
-						selectedInputTextElement.style.backgroundColor = "white";
+						selectedInputTextElement.style.backgroundColor = "none";
 
 					}
 
@@ -340,6 +344,73 @@ function solveClicked(){
 	}
 }
 
+// timer
+
+
+
+var hr = 0;
+var min = 0;
+var sec = 0;
+var stoptime = true;
+
+function startTimer() {
+	console.log("start");
+	startButton.style.right = "3000px";
+	stopButton.style.right = "50px";
+
+	console.log(stopButton.style.right);
+	console.log(startButton.style.right);
+  	if (stoptime == true) {
+        stoptime = false;
+        timerCycle();
+    }
+	
+}
+function stopTimer() {
+	console.log("stop");
+	stopButton.style.right = "3000px";
+	startButton.style.right = "50px";
+	console.log(stopButton.style.right);
+	console.log(startButton.style.right);
+  	if (stoptime == false) {
+    stoptime = true;
+  	}
+	
+
+}
+
+function timerCycle() {
+    if (stoptime == false) {
+    sec = parseInt(sec);
+    min = parseInt(min);
+    hr = parseInt(hr);
+    sec = sec + 1;
+    if (sec == 60) {
+      min = min + 1;
+      sec = 0;
+    }
+    if (min == 60) {
+      hr = hr + 1;
+      min = 0;
+      sec = 0;
+    }
+    if (sec < 10 || sec == 0) {
+      sec = '0' + sec;
+    }
+    if (min < 10 || min == 0) {
+      min = '0' + min;
+    }
+    if (hr < 10 || hr == 0) {
+      hr = '0' + hr;
+    }
+    timer.innerHTML = hr + ':' + min + ':' + sec;
+    setTimeout("timerCycle()", 1000);
+  }
+}
+
+function resetTimer() {
+    timer.innerHTML = '00:00:00';
+}
 
 
 

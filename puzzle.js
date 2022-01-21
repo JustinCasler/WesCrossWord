@@ -41,36 +41,8 @@ function initializeScreen(){
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
-				// setting up to call function based on key input
-				// Error: Cannot read properties of null (reading 'focus') -> problem with newRowTxtID
-				let inBox = document.getElementById(txtID)
-				if(inBox){
-					inBox.addEventListener("keydown", myFunction);
-				}
-				function myFunction(event, fromTextBox, newRowBox, newColBox) {
-
-				switch (event.key) {
-					case "ArrowDown":
-						console.log("ArrowDown");
-					break;
-					case "ArrowUp":
-						console.log("ArrowUp");
-					break;
-					case "ArrowLeft":
-						console.log("ArrowLeft");
-					break;
-					case "ArrowRight":
-						console.log("ArrowRight");
-						moveCursorIfBlank(this, newRowTxtID ,  newColTxtID)
-					break;
-					default:
-						console.log(event.key, event.keyCode);
-					return; 
-				}
-
-				event.preventDefault();
-				}
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				
 			}
 			else{cell.style.background = "black";}	
 		}
@@ -173,52 +145,71 @@ function getColTxt(i, j, colData, nextColData){
 	return newColTxtID;
 
 }
+// setting up to call function based on key input
+// Error: Cannot read properties of null (reading 'focus') -> problem with newRowTxtID
+function keyEvents(event, fromTextBox, newRowBox, newColBox) {
+	if (event.keyCode >= 65 && event.keyCode <= 90){
+    console.log("input was a-z")
+	moveCursor(this, newRowBox ,  newColBox)
+	}
+	switch (event.key) {
+		case "ArrowDown":
+			console.log("ArrowDown");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+		break;
+		case "ArrowUp":
+			console.log("ArrowUp");
+		break;
+		case "ArrowLeft":
+			console.log("ArrowLeft");
+		break;
+		case "ArrowRight":
+			console.log("ArrowRight");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+		break;
+		default:
+			console.log(event.key, event.keyCode);
+		return; 
+	}
 
+	event.preventDefault();
+}
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox){
-	var length = fromTextBox.value.length;
-	var maxLength = fromTextBox.getAttribute("maxLength");
 	if(downOrAcross == false){
-		if (length == maxLength){
-			document.getElementById(newRowBox).focus();
-		}
+		document.getElementById(newRowBox).focus();
 		rowcol = newRowBox[4] + newRowBox[6];
 		highlightSquares(rowcol, newRowBox);
-
 	}
 	else if(downOrAcross == true){
-		if (length == maxLength){
-			document.getElementById(newColBox).focus();
-		}
+		document.getElementById(newColBox).focus();
 		rowcol = newColBox[4] + newColBox[6];
 		highlightSquares(rowcol, newColBox);
 	}
 	updateDownOrAcross();
 }
 // duplicate moveCursor for arrow and backspace
-function moveCursorIfBlank(fromTextBox, newRowBox, newColBox){
-	console.log('working')
-	console.log('fromTextBox:',fromTextBox + ' newRowBox: ',newRowBox+' newColBox: '+newColBox)
-	let value = fromTextBox.value.trim()
-	
+function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox){
 	if(downOrAcross == false){
-		if (value.length == 0){
-
+		if (event.keyCode == 39){
+			console.log('working right')
 			document.getElementById(newRowBox).focus();
 		}
+		highlightSquares(rowcol, newRowBox);
 		rowcol = newRowBox[4] + newRowBox[6];
 	}
-	else if(downOrAcross == true){
-		if (value.length == 0){
 
+	else if(downOrAcross == true){
+		if (event.keyCode == 40){
+			console.log('working down')
 			document.getElementById(newColBox).focus();
 		}
 		rowcol = newColBox[4] + newColBox[6];
-		
+		highlightSquares(rowcol, newRowBox);
+		}
+	updateDownOrAcross();	
 	}
-	updateDownOrAcross();
-}
-//goes back a square 
+	
 
 // switches downOrAcross
 function updateDownOrAcross(){

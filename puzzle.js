@@ -53,9 +53,9 @@ function initializeScreen(){
 				
 		
 	}
-	
-	addHint();
 	startTimer();
+	addHint();
+	
 }
 
 

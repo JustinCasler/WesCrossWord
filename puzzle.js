@@ -251,6 +251,7 @@ function addHint(){
 function textInputFocus(txtID123){
 	currentTextInput = txtID123;
 }
+
 //Returns Array
 function preparePuzzelArray(){
 	var items = [

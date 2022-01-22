@@ -283,23 +283,23 @@ nav{
   
   #play-button{
 	  position: absolute;
-	  padding: none;
+	  padding: 2px;
 	  display: inline;
-	  right: -30 px;
+	  right: 300px;
   }
 
   #stop-button{
 	  position: absolute;
-	  padding: none;
+	  padding: 2px;
 	  display: inline;
-	  right: 3000px;
+	  right: 0px;
 	  
 	  
   }
 
   #reset-button{
 
-	  padding-left: 50px;
+	  padding-left: 5px;
 	  
   }
 

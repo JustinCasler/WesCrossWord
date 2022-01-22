@@ -356,7 +356,7 @@ var stoptime = true;
 function startTimer() {
 	console.log("start");
 	startButton.style.right = "3000px";
-	stopButton.style.right = "50px";
+	stopButton.style.right = "15px";
 
 	console.log(stopButton.style.right);
 	console.log(startButton.style.right);
@@ -369,14 +369,12 @@ function startTimer() {
 function stopTimer() {
 	console.log("stop");
 	stopButton.style.right = "3000px";
-	startButton.style.right = "50px";
+	startButton.style.right = "15px";
 	console.log(stopButton.style.right);
 	console.log(startButton.style.right);
   	if (stoptime == false) {
     stoptime = true;
   	}
-	
-
 }
 
 function timerCycle() {

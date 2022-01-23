@@ -7,20 +7,33 @@ var downOrAcross = false;
 const timer = document.getElementById('stopwatch');
 const stopButton = document.getElementById('stop-button');
 const startButton = document.getElementById('play-button');
+var hr = 0;
+var min = 0;
+var sec = 0;
+var stoptime = true;
+var clueSelected = [];
 
 //Loads the Crossword
 function initializeScreen(){
-	
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
+	var clueArray = []
+	clueArray = getClueArray(puzzelArrayData);
+	var downClues = clueArray[0];
+	var acrossClues = clueArray[1];
+	var availableSquares = getNextAvailableSquare();
+	console.log(availableSquares);
+
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
 		if (i < puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[i+1]
+			var pastRowData = puzzelArrayData[i-1]
 		}
 		if (i == puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[0]
+			var pastRowData = puzzelArrayData[i-1]
 		}
 		for(var j = 0 ; j < rowData.length ; j++){
 			var cell = row.insertCell(-1);
@@ -39,142 +52,243 @@ function initializeScreen(){
 						nextColData.push(puzzelArrayData[k][0]);
 					}
 				}
+				var downClue = downClues[(i*rowData.length)+j];
+				var acrossClue = acrossClues[(i*rowData.length)+j];
+				var downAcross = String(downClue + ' ' + acrossClue);
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
-				var newColTxtID = getColTxt(i, j, colData, nextColData);
-				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+
-				 	rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + 
-					newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + 
-					txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				var newColTxtID = getColNext(i, j, availableSquares);
+				console.log(newColTxtID);
+				// var newColTxtID = getColTxt(i, j, colData, nextColData);
+				var newRowTxtID = getRowNext(i, j, availableSquares);
+				// var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
+				var pastRowTxtID = getPastRowTxt(i, j, rowData, pastRowData);
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\')" onclick="highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
-			else{cell.style.background = "black";}	
+			else{
+				cell.style.background = "black";
+			}	
 		}
-				
 		
 	}
 	startTimer();
-	addHint();
+	// addHint();
 	
 }
 
 
-
-
-// get the next square across
-function getRowTxt(i,j, rowData, nextRowData){
-	if(j != rowData.length - 1){
-		if(rowData[j+1] != 0) 
-			var newRowTxtID = String('txt' + '_' + i + '_' + (j+1));
-		else if(j != rowData.length - 2){
-			if(rowData[j+2] != 0) 
-				var newRowTxtID = String('txt' + '_' + i + '_' + (j+2));
+function getPastRowTxt(i, j, rowData, pastRowData){
+	if(j!= 0){
+		if(rowData[j-1] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-1));
 		}
-		else{ 
-			if(nextRowData[0] != 0){
-				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-			}
-			else if (nextRowData[1] != 0)
-				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+		else if(rowData[j-2] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-2));
 		}
-	}	
-	else if(j == rowData.length - 1){
-		if(nextRowData[0] != 0){
-			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 0);
+		else if(rowData[j-3] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-3));
 		}
-		else if(nextRowData[1] != 0){
-			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
+	}
+	else if(j == 0){
+		if (pastRowData[4] != 0){
+			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 4);
 		}
-	}	
-	return newRowTxtID;
-
+		else if (pastRowData[3] != 0){
+			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 3);
+		}
+	}
+	return newRowTxtID
 }
 
-// get the next square down
-function getColTxt(i, j, colData, nextColData){
-	if(i != colData.length -1){
-		if(colData[i+1] != 0){
-			var newColTxtID = String('txt' + '_' + (i+1) + '_' + (j));
-			console.log(i,j,newColTxtID);
+//get the next Row
+function getRowNext(i, j, availableSquares){
+	current = (i * puzzelArrayData.length) + j;
+	acrossSquares = availableSquares[1];
+	number = 0;
+	for (var k = 1; k < acrossSquares.length; k++){
+		if(acrossSquares[current + k] == 1){
+			number = current + k;
+			break;
 		}
-		else if(i != colData.length -2){
-			if(colData[i+2] != 0 ){
-				var newColTxtID = String('txt' + '_' + (i+2) + '_' + (j));
-				console.log(i,j,newColTxtID);
-			}
-
-			else if(i != colData.length -3){
-				if(colData[i+3] != 0){
-					var newColTxtID = String('txt' + '_' + (i+3) + '_' + (j));
-					console.log(i,j,newColTxtID);
+		else if(current+k == acrossSquares.length){
+			number = 0;
+			for (var l = 0; l < acrossSquares.length; l++){
+				if(acrossSquares[l] == 1){
+					number = l;
+					break;
 				}
 			}
 		}
-		else if(i == colData.length -2){
-			if(nextColData[0] != 0){
-				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
-			}
-			else if(nextColData[1] != 0){
-				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
-			}
-		}
 	}
-	else if(i == colData.length -1){
-		if(j < colData.length -1){
-			if(nextColData[0] != 0){
-				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
-			}
-			else if(nextColData[1] != 0){
-				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
-			}
-		}
-		else if(j == colData.length -1){
-			if(nextColData[0] != 0){
-				var newColTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-				console.log(i,j,newColTxtID);
-			}
-		}
-		
-	}
-	else if(nextColData[1] != 0){
-		var newColTxtID = String('txt' + '_' + (i) + '_' + (1));
-		console.log(i,j,newColTxtID);
-
-	}		
-	else{
-		var newColTxtID = String('txt' + '_' + (i) + '_' + (2));
-		console.log(newColTxtID);
-		}
-	
-	return newColTxtID;
-
+	var row = Math.floor(number / puzzelArrayData.length);
+	var col = number % puzzelArrayData.length;
+	var textID = String('txt' + '_' + row + '_' + col);
+	return textID;
 }
 
+//get the next column
+function getColNext(i, j, availableSquares){
+	current = (j * puzzelArrayData.length) + i;
+	downSquares = availableSquares[0];
+	console
+	number = 0;
+	for (var k = 1; k < downSquares.length; k++){
+		if(downSquares[current + k] == 1){
+			number = current + k;
+			console.log(number);
+			break;
+		}
+		else if(current+k == downSquares.length){
+			number = 0;
+			for (var l = 0; l < downSquares.length; l++){
+				if(downSquares[l] == 1){
+					number = l;
+					break;
+				}
+			}
+		}
+	}
+	var col = Math.floor(number / puzzelArrayData.length);
+	var row = number % puzzelArrayData.length;
+	var textID = String('txt' + '_' + row + '_' + col);
+	console.log(textID);
+	return textID;
+
+}
+// setting up to call function based on key input
+function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox) {
+	if (event.keyCode >= 65 && event.keyCode <= 90){
+    console.log("input was a-z")
+	console.log(newRowBox)
+	moveCursor(fromTextBox, newRowBox, newColBox)
+	}
+	switch (event.key) {
+		case "ArrowDown":
+			console.log("ArrowDown");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox)
+		break;
+		case "ArrowUp":
+			console.log("ArrowUp");
+		break;
+		case "ArrowLeft":
+			console.log("ArrowLeft");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
+		break;
+		case "ArrowRight":
+			console.log("ArrowRight");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+		break;
+		case "Backspace":
+			console.log('Backspace')
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
+		break
+		default:
+			console.log(event.key, event.keyCode);
+		return; 
+	}
+
+	event.preventDefault();
+}
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox){
+	puzzleArray = preparePuzzelArray();
+	clueArray = getClueArray(puzzleArray);
+	var newColClue = (parseInt(newColBox[4]) * puzzleArray.length) + parseInt(newColBox[6]);
+	var newRowClue = (parseInt(newRowBox[4]) * puzzleArray.length) + parseInt(newRowBox[6]);
+	console.log(fromTextBox)
+
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
 	if(downOrAcross == false){
 		if (length == maxLength){
 			document.getElementById(newRowBox).focus();
 		}
-		rowcol = newRowBox[4] + newRowBox[6];
+		var downClue = clueArray[0][newRowClue];
+		var acrossClue = clueArray[1][newRowClue];
+		console.log(downClue, acrossClue);
+		var downAcross = String(downClue + ' ' + acrossClue);
+		var rowcol = newRowBox[4] + newRowBox[6];
+		console.log(downAcross);
 		highlightSquares(rowcol, newRowBox);
+		highlightClue(downAcross);
 
 	}
 	else if(downOrAcross == true){
 		if (length == maxLength){
 			document.getElementById(newColBox).focus();
 		}
+		var downClue = clueArray[0][newColClue];
+		var acrossClue = clueArray[1][newColClue];
+		var downAcross = String(downClue + ' ' + acrossClue);
+		var rowcol = newColBox[4] + newColBox[6];
+		console.log(downAcross);
+		highlightSquares(rowcol, newColBox);
+		highlightClue(downAcross);
+	}
+	updateDownOrAcross();
+	
+}
+// duplicate moveCursor for arrow and backspace
+function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox){
+	selectedInputTextElement = document.getElementById(fromTextBox)
+	console.log('lastRowBox:', lastRowBox)
+	if(downOrAcross == true && event.keyCode == 39){
+		rowcol = newRowBox[4] + newRowBox[6];
+		highlightSquares(rowcol, newRowBox);
+	}
+	else if(downOrAcross == true && event.keyCode == 37){
+		rowcol = lastRowBox[4] + lastRowBox[6];
+		highlightSquares(rowcol, lastRowBox)
+	}
+	if(downOrAcross == false){
+		if (event.keyCode == 39){
+			console.log('working right')
+			document.getElementById(newRowBox).focus();
+			rowcol = newRowBox[4] + newRowBox[6];
+			highlightSquares(rowcol, newRowBox);
+			
+		}
+		else if (event.keyCode == 37){
+			console.log('working left')
+			document.getElementById(lastRowBox).focus();
+			rowcol = lastRowBox[4] + lastRowBox[6];
+			highlightSquares(rowcol, lastRowBox)
+			
+		}
+		else if (event.keyCode == 8 && currentTextInput == ''){
+				console.log('error')
+				console.log('working back')
+				document.getElementById(lastRowBox).focus();
+				rowcol = newRowBox[4] + newRowBox[6];
+				highlightSquares(rowcol, lastRowBox)
+		}
+	}
+	if(downOrAcross == false && event.keyCode == 40){
 		rowcol = newColBox[4] + newColBox[6];
 		highlightSquares(rowcol, newColBox);
 	}
-	updateDownOrAcross();
-}
+	if(downOrAcross == true){
+		if (event.keyCode == 40){
+			console.log('working down')
+			console.log(lastRowBox)
+			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
+		}
+	}
+
+/*
+	else if(downOrAcross == true){
+		if(event.keyCode == 38){
+			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
+		}
+	}
+	*/	
+	updateDownOrAcross()
+	}
 
 // switches downOrAcross
 function updateDownOrAcross(){
@@ -185,6 +299,59 @@ function updateDownOrAcross(){
 		downOrAcross = true;
 	}
 	console.log(downOrAcross);
+}
+
+// clue pointer array
+function getClueArray(board){
+	var sideLength = board.length; 
+	downclueArray = [];
+	acrossclueArray = [];
+	clueNumber = 0; 
+	for (var i = 0; i < board.length; i++){
+		for (var j = 0; j < board[i].length; j++){
+			var tempClueNumber = clueNumber;
+			if (board[i][j] == 0){
+				downclueArray.push(0);
+				acrossclueArray.push(0);
+			}
+			else{
+				if(i == 0 || board[i-1][j] == 0){
+					clueNumber++;
+					downclueArray.push(clueNumber);
+					if(j==0 || board[i][j-1] == 0){
+						acrossclueArray.push(clueNumber);
+					}
+					else{
+						var tempAcross = acrossclueArray[((i*sideLength) + j) - 1];
+						acrossclueArray.push(tempAcross);
+					}
+				}
+				else{
+					var tempDown = downclueArray[((i*sideLength) + j) - sideLength];
+					downclueArray.push(tempDown);
+					if(j==0 || board[i][j-1] == 0){
+						if(tempClueNumber == clueNumber){
+							clueNumber++;
+						}
+						acrossclueArray.push(clueNumber);
+					}
+					else{
+						var tempAcross = acrossclueArray[((i*sideLength) + j) - 1];
+					acrossclueArray.push(tempAcross);
+
+					}
+
+				}
+				
+			}
+
+			
+		}
+		bothArrays = [downclueArray, acrossclueArray];
+	}
+	return (bothArrays);
+
+
 }
 
 //Adds the hint numbers
@@ -200,9 +367,11 @@ function addHint(){
 function textInputFocus(txtID123){
 	currentTextInput = txtID123;
 }
+
 //Returns Array
 function preparePuzzelArray(){
-	var items = [['0', 's', 'h', 'e', '0'],
+	var items = [
+				['0', 's', 'h', 'e', '0'],
 				['t', 'h', 'a', 't', 's'],
 				['t', 'o', 't', 'e', 's'],
 				['s', 'w', 'e', 'a', 't'],
@@ -217,7 +386,6 @@ function clearAllClicked(){
 	puzzelTable.innerHTML = '';
     initializeScreen();
 }
-
 
 //Highlight the selected squares and row/column
 function highlightSquares(rowcol, squareID){
@@ -265,6 +433,82 @@ function highlightSquares(rowcol, squareID){
 	}
 	var selectedSquare = document.getElementById(squareID);
 	selectedSquare.style.background = "#FFCA55";
+
+}
+
+//highlight the clue
+function highlightClue(downAcross){
+	var clues = downAcross.split(' ');
+	acrossID = String("acrossClue"+clues[1])
+	downID = String("downClue"+clues[0])
+	downClue = document.getElementById(downID);
+	acrossClue = document.getElementById(acrossID);
+	
+	
+	if(clueSelected.length != 0){
+		for (var i = 0; i < clueSelected.length; i++){
+			var box = document.getElementById(clueSelected[i]);
+			box.style.background = "none";
+			box.style.border = "none";
+		}
+	}
+	console.log(downOrAcross);
+	if (downOrAcross != true){
+		downClue.style.background = "#FFCA55";
+		acrossClue.style.border = "thick solid #FFCA55";
+		clueSelected.push(downID);
+		clueSelected.push(acrossID);
+		clueText = downClue.innerHTML
+		
+		document.getElementById("clue-text").innerHTML = clueText;
+		
+
+	}
+	else{
+		downClue.style.border = "thick solid #FFCA55";
+		acrossClue.style.background = "#FFCA55";
+		clueSelected.push(downID);
+		clueSelected.push(acrossID);
+		clueText = acrossClue.innerHTML
+		document.getElementById("clue-text").innerHTML = clueText;
+	}
+	
+	
+
+
+}
+
+//get next available square
+function getNextAvailableSquare(){
+	var fullPuzzle = preparePuzzelArray();
+	var nextAvailableSquareAcross = [];
+	var nextAvailableSquareDown = [];
+	for(i = 0; i < fullPuzzle.length; i++){
+		for(j = 0; j < fullPuzzle[i].length; j++){
+			if(fullPuzzle[i][j] == 0){
+				nextAvailableSquareAcross.push(0);
+				
+			}
+
+			else{
+				nextAvailableSquareAcross.push(1);
+			}
+		}
+	}
+	for(i = 0; i < fullPuzzle.length; i++){
+		for(j = 0; j < fullPuzzle[i].length; j++){
+			if(fullPuzzle[j][i] == 0){
+				nextAvailableSquareDown.push(0);			
+			}
+			else{
+				nextAvailableSquareDown.push(1);
+			}
+		}
+	}
+	var nextAvailableSquare = [];
+	nextAvailableSquare.push(nextAvailableSquareDown);
+	nextAvailableSquare.push(nextAvailableSquareAcross);
+	return nextAvailableSquare;
 
 }
 
@@ -344,39 +588,31 @@ function solveClicked(){
 	}
 }
 
+
 // timer
-
-
-
-var hr = 0;
-var min = 0;
-var sec = 0;
-var stoptime = true;
-
+// start timer
 function startTimer() {
 	console.log("start");
 	startButton.style.right = "3000px";
 	stopButton.style.right = "15px";
-
-	console.log(stopButton.style.right);
-	console.log(startButton.style.right);
   	if (stoptime == true) {
         stoptime = false;
         timerCycle();
     }
 	
 }
+
+// stop timer
 function stopTimer() {
 	console.log("stop");
 	stopButton.style.right = "3000px";
 	startButton.style.right = "15px";
-	console.log(stopButton.style.right);
-	console.log(startButton.style.right);
   	if (stoptime == false) {
     stoptime = true;
   	}
 }
 
+// timer
 function timerCycle() {
     if (stoptime == false) {
     sec = parseInt(sec);
@@ -406,11 +642,10 @@ function timerCycle() {
   }
 }
 
+// reset timer
 function resetTimer() {
     timer.innerHTML = '00:00:00';
 }
-
-
 
 /*side Menu*/	
 function showMenu(){
@@ -421,80 +656,4 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
            }
-/* 					switch(i+','+j){
-					case('0,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('0,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_2\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_3\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_0\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('1,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-				}
-*/
-						
+			

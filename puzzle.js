@@ -7,12 +7,21 @@ var downOrAcross = false;
 const timer = document.getElementById('stopwatch');
 const stopButton = document.getElementById('stop-button');
 const startButton = document.getElementById('play-button');
+var hr = 0;
+var min = 0;
+var sec = 0;
+var stoptime = true;
+var clueSelected = [];
 
 //Loads the Crossword
 function initializeScreen(){
-	
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
+	var clueArray = []
+	clueArray = getClueArray(puzzelArrayData);
+	var downClues = clueArray[0];
+	var acrossClues = clueArray[1];
+
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
@@ -39,12 +48,15 @@ function initializeScreen(){
 						nextColData.push(puzzelArrayData[k][0]);
 					}
 				}
+				var downClue = downClues[(i*rowData.length)+j];
+				var acrossClue = acrossClues[(i*rowData.length)+j];
+				var downAcross = String(downClue + ' ' + acrossClue);
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+
-				 	rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "onkeyup= "moveCursor(this, \'' + 
+				 	rowcol + '\' , \'' + txtID + '\'); updateDownOrAcross(); highlightClue(\'' + downAcross + '\');" onkeyup= "moveCursor(this, \'' + 
 					newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + 
 					txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
@@ -57,8 +69,6 @@ function initializeScreen(){
 	addHint();
 	
 }
-
-
 
 
 // get the next square across
@@ -95,29 +105,24 @@ function getColTxt(i, j, colData, nextColData){
 	if(i != colData.length -1){
 		if(colData[i+1] != 0){
 			var newColTxtID = String('txt' + '_' + (i+1) + '_' + (j));
-			console.log(i,j,newColTxtID);
 		}
 		else if(i != colData.length -2){
 			if(colData[i+2] != 0 ){
 				var newColTxtID = String('txt' + '_' + (i+2) + '_' + (j));
-				console.log(i,j,newColTxtID);
 			}
 
 			else if(i != colData.length -3){
 				if(colData[i+3] != 0){
 					var newColTxtID = String('txt' + '_' + (i+3) + '_' + (j));
-					console.log(i,j,newColTxtID);
 				}
 			}
 		}
 		else if(i == colData.length -2){
 			if(nextColData[0] != 0){
 				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
 			}
 			else if(nextColData[1] != 0){
 				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
 			}
 		}
 	}
@@ -125,55 +130,62 @@ function getColTxt(i, j, colData, nextColData){
 		if(j < colData.length -1){
 			if(nextColData[0] != 0){
 				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
 			}
 			else if(nextColData[1] != 0){
 				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-				console.log(i,j,newColTxtID);
 			}
 		}
 		else if(j == colData.length -1){
 			if(nextColData[0] != 0){
 				var newColTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-				console.log(i,j,newColTxtID);
 			}
 		}
 		
 	}
 	else if(nextColData[1] != 0){
 		var newColTxtID = String('txt' + '_' + (i) + '_' + (1));
-		console.log(i,j,newColTxtID);
-
 	}		
 	else{
 		var newColTxtID = String('txt' + '_' + (i) + '_' + (2));
-		console.log(newColTxtID);
 		}
-	
 	return newColTxtID;
-
 }
 
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox){
+	puzzleArray = preparePuzzelArray();
+	clueArray = getClueArray(puzzleArray);
+	var newColClue = (parseInt(newColBox[4]) * puzzleArray.length) + parseInt(newColBox[6]);
+	var newRowClue = (parseInt(newRowBox[4]) * puzzleArray.length) + parseInt(newRowBox[6]);
+
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
 	if(downOrAcross == false){
 		if (length == maxLength){
 			document.getElementById(newRowBox).focus();
 		}
-		rowcol = newRowBox[4] + newRowBox[6];
+		var downClue = clueArray[0][newRowClue];
+		var acrossClue = clueArray[1][newRowClue];
+		console.log(downClue, acrossClue);
+		var downAcross = String(downClue + ' ' + acrossClue);
+		var rowcol = newRowBox[4] + newRowBox[6];
 		highlightSquares(rowcol, newRowBox);
+		highlightClue(downAcross);
 
 	}
 	else if(downOrAcross == true){
 		if (length == maxLength){
 			document.getElementById(newColBox).focus();
 		}
-		rowcol = newColBox[4] + newColBox[6];
+		var downClue = clueArray[0][newColClue];
+		var acrossClue = clueArray[1][newColClue];
+		var downAcross = String(downClue + ' ' + acrossClue);
+		var rowcol = newColBox[4] + newColBox[6];
 		highlightSquares(rowcol, newColBox);
+		highlightClue(downAcross);
 	}
 	updateDownOrAcross();
+	
 }
 
 // switches downOrAcross
@@ -185,6 +197,59 @@ function updateDownOrAcross(){
 		downOrAcross = true;
 	}
 	console.log(downOrAcross);
+}
+
+// clue pointer array
+function getClueArray(board){
+	var sideLength = board.length; 
+	downclueArray = [];
+	acrossclueArray = [];
+	clueNumber = 0; 
+	for (var i = 0; i < board.length; i++){
+		for (var j = 0; j < board[i].length; j++){
+			var tempClueNumber = clueNumber;
+			if (board[i][j] == 0){
+				downclueArray.push(0);
+				acrossclueArray.push(0);
+			}
+			else{
+				if(i == 0 || board[i-1][j] == 0){
+					clueNumber++;
+					downclueArray.push(clueNumber);
+					if(j==0 || board[i][j-1] == 0){
+						acrossclueArray.push(clueNumber);
+					}
+					else{
+						var tempAcross = acrossclueArray[((i*sideLength) + j) - 1];
+						acrossclueArray.push(tempAcross);
+					}
+				}
+				else{
+					var tempDown = downclueArray[((i*sideLength) + j) - sideLength];
+					downclueArray.push(tempDown);
+					if(j==0 || board[i][j-1] == 0){
+						if(tempClueNumber == clueNumber){
+							clueNumber++;
+						}
+						acrossclueArray.push(clueNumber);
+					}
+					else{
+						var tempAcross = acrossclueArray[((i*sideLength) + j) - 1];
+					acrossclueArray.push(tempAcross);
+
+					}
+
+				}
+				
+			}
+
+			
+		}
+		bothArrays = [downclueArray, acrossclueArray];
+	}
+	return (bothArrays);
+
+
 }
 
 //Adds the hint numbers
@@ -217,7 +282,6 @@ function clearAllClicked(){
 	puzzelTable.innerHTML = '';
     initializeScreen();
 }
-
 
 //Highlight the selected squares and row/column
 function highlightSquares(rowcol, squareID){
@@ -265,6 +329,46 @@ function highlightSquares(rowcol, squareID){
 	}
 	var selectedSquare = document.getElementById(squareID);
 	selectedSquare.style.background = "#FFCA55";
+
+}
+
+function highlightClue(downAcross){
+	var clues = downAcross.split(' ');
+	acrossID = String("acrossClue"+clues[1])
+	downID = String("downClue"+clues[0])
+	downClue = document.getElementById(downID);
+	acrossClue = document.getElementById(acrossID);
+	
+	
+	if(clueSelected.length != 0){
+		for (var i = 0; i < clueSelected.length; i++){
+			var box = document.getElementById(clueSelected[i]);
+			box.style.background = "none";
+			box.style.border = "none";
+		}
+	}
+	if (downOrAcross == true){
+		downClue.style.background = "#FFCA55";
+		acrossClue.style.border = "thick solid #FFCA55";
+		clueSelected.push(downID);
+		clueSelected.push(acrossID);
+		clueText = downClue.innerHTML
+		
+		document.getElementById("clue-text").innerHTML = clueText;
+		
+
+	}
+	else{
+		downClue.style.border = "thick solid #FFCA55";
+		acrossClue.style.background = "#FFCA55";
+		clueSelected.push(downID);
+		clueSelected.push(acrossID);
+		clueText = acrossClue.innerHTML
+		document.getElementById("clue-text").innerHTML = clueText;
+	}
+	
+	
+
 
 }
 
@@ -344,39 +448,31 @@ function solveClicked(){
 	}
 }
 
+
 // timer
-
-
-
-var hr = 0;
-var min = 0;
-var sec = 0;
-var stoptime = true;
-
+// start timer
 function startTimer() {
 	console.log("start");
 	startButton.style.right = "3000px";
 	stopButton.style.right = "15px";
-
-	console.log(stopButton.style.right);
-	console.log(startButton.style.right);
   	if (stoptime == true) {
         stoptime = false;
         timerCycle();
     }
 	
 }
+
+// stop timer
 function stopTimer() {
 	console.log("stop");
 	stopButton.style.right = "3000px";
 	startButton.style.right = "15px";
-	console.log(stopButton.style.right);
-	console.log(startButton.style.right);
   	if (stoptime == false) {
     stoptime = true;
   	}
 }
 
+// timer
 function timerCycle() {
     if (stoptime == false) {
     sec = parseInt(sec);
@@ -406,11 +502,10 @@ function timerCycle() {
   }
 }
 
+// reset timer
 function resetTimer() {
     timer.innerHTML = '00:00:00';
 }
-
-
 
 /*side Menu*/	
 function showMenu(){
@@ -420,81 +515,4 @@ function showMenu(){
 function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
-           }
-/* 					switch(i+','+j){
-					case('0,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('0,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_2\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_3\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('0,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_1_0\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-					case('1,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('1,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('2,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('3,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,0'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,1'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,2'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,3'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_4\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-					case('4,4'):
-						cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeyup= "moveCursor(this, \'txt_0_1\') "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
-						console.log('case 1:')
-				}
-*/
-						
+           }			

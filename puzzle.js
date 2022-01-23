@@ -16,9 +16,11 @@ function initializeScreen(){
 		var rowData = puzzelArrayData[i]
 		if (i < puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[i+1]
+			var pastRowData = puzzelArrayData[i-1]
 		}
 		if (i == puzzelArrayData.length -1){
 			var nextRowData = puzzelArrayData[0]
+			var pastRowData = puzzelArrayData[i-1]
 		}
 		for(var j = 0 ; j < rowData.length ; j++){
 			var cell = row.insertCell(-1);
@@ -41,7 +43,8 @@ function initializeScreen(){
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\')" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				var pastRowTxtID = getPastRowTxt(i, j, rowData, pastRowData);
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\')" onclick="highlightSquares(\''+ rowcol + '\' , \'' + txtID + '\' ); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 				
 			}
 			else{cell.style.background = "black";}	
@@ -81,7 +84,28 @@ function getRowTxt(i,j, rowData, nextRowData){
 	return newRowTxtID;
 
 }
-
+function getPastRowTxt(i, j, rowData, pastRowData){
+	if(j!= 0){
+		if(rowData[j-1] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-1));
+		}
+		else if(rowData[j-2] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-2));
+		}
+		else if(rowData[j-3] != 0){
+			var newRowTxtID = String('txt' + '_' + i + '_' + (j-3));
+		}
+	}
+	else if(j == 0){
+		if (pastRowData[4] != 0){
+			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 4);
+		}
+		else if (pastRowData[3] != 0){
+			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 3);
+		}
+	}
+	return newRowTxtID
+}
 // get the next square down
 function getColTxt(i, j, colData, nextColData){
 	if(i != colData.length -1){
@@ -146,8 +170,7 @@ function getColTxt(i, j, colData, nextColData){
 
 }
 // setting up to call function based on key input
-// Error: Cannot read properties of null (reading 'focus') -> problem with newRowTxtID
-function keyEvents(event, fromTextBox, newRowBox, newColBox) {
+function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox) {
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z")
 	moveCursor(this, newRowBox ,  newColBox)
@@ -155,18 +178,23 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox) {
 	switch (event.key) {
 		case "ArrowDown":
 			console.log("ArrowDown");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox)
 		break;
 		case "ArrowUp":
 			console.log("ArrowUp");
 		break;
 		case "ArrowLeft":
 			console.log("ArrowLeft");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
 		break;
 		case "ArrowRight":
 			console.log("ArrowRight");
 			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
 		break;
+		case "Backspace":
+			console.log('Backspace')
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
+		break
 		default:
 			console.log(event.key, event.keyCode);
 		return; 
@@ -189,32 +217,47 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 	updateDownOrAcross();
 }
 // duplicate moveCursor for arrow and backspace
-function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox){
-	if(downOrAcross == false){
+function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox){
+	selectedInputTextElement = document.getElementById(fromTextBox)
+	console.log('lastRowBox:', lastRowBox)
+	if(downOrAcross == true && event.keyCode == 39){
+		rowcol = newRowBox[4] + newRowBox[6];
+		highlightSquares(rowcol, newRowBox);
+	}
+	else if(downOrAcross == false){
 		if (event.keyCode == 39){
 			console.log('working right')
 			document.getElementById(newRowBox).focus();
 			rowcol = newRowBox[4] + newRowBox[6];
 			highlightSquares(rowcol, newRowBox);
+			
+		}
+		else if (event.keyCode == 37){
+			console.log('working left')
+			document.getElementById(lastRowBox).focus();
+			rowcol = newRowBox[4] + lastRowBox[6];
+			highlightSquares(rowcol, lastRowBox)
+			
+		}
+		else if (event.keyCode == 8 && currentTextInput == ''){
+				console.log('error')
+				console.log('working back')
+				document.getElementById(lastRowBox).focus();
+				rowcol = newRowBox[4] + newRowBox[6];
+				highlightSquares(rowcol, lastRowBox)
 		}
 	}
-
-	else if(downOrAcross == true){
+	if(downOrAcross == true){
 		if (event.keyCode == 40){
 			console.log('working down')
+			console.log(lastRowBox)
 			document.getElementById(newColBox).focus();
 			rowcol = newColBox[4] + newColBox[6];
 			highlightSquares(rowcol, newColBox);
 		}
-		}
-/*		
-	else if(downOrAcross == false){
-		if (event.keyCode == 37){
-			document.getElementById(newRowBox).focus();
-			rowcol = newRowBox[4] + newRowBox[6];
-			highlightSquares(rowcol, newRowBox)
-		}
 	}
+
+/*
 	else if(downOrAcross == true){
 		if(event.keyCode == 38){
 			document.getElementById(newColBox).focus();
@@ -222,8 +265,8 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox){
 			highlightSquares(rowcol, newColBox);
 		}
 	}
-	*/
-	updateDownOrAcross();	
+	*/	
+	updateDownOrAcross()
 	}
 	
 

@@ -224,7 +224,11 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox)
 		rowcol = newRowBox[4] + newRowBox[6];
 		highlightSquares(rowcol, newRowBox);
 	}
-	else if(downOrAcross == false){
+	else if(downOrAcross == true && event.keyCode == 37){
+		rowcol = lastRowBox[4] + lastRowBox[6];
+		highlightSquares(rowcol, lastRowBox)
+	}
+	if(downOrAcross == false){
 		if (event.keyCode == 39){
 			console.log('working right')
 			document.getElementById(newRowBox).focus();
@@ -235,7 +239,7 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox)
 		else if (event.keyCode == 37){
 			console.log('working left')
 			document.getElementById(lastRowBox).focus();
-			rowcol = newRowBox[4] + lastRowBox[6];
+			rowcol = lastRowBox[4] + lastRowBox[6];
 			highlightSquares(rowcol, lastRowBox)
 			
 		}
@@ -246,6 +250,10 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox)
 				rowcol = newRowBox[4] + newRowBox[6];
 				highlightSquares(rowcol, lastRowBox)
 		}
+	}
+	if(downOrAcross == false && event.keyCode == 40){
+		rowcol = newColBox[4] + newColBox[6];
+		highlightSquares(rowcol, newColBox);
 	}
 	if(downOrAcross == true){
 		if (event.keyCode == 40){

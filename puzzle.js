@@ -56,7 +56,7 @@ function initializeScreen(){
 				var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onclick="highlightSquares(\''+
-				 	rowcol + '\' , \'' + txtID + '\'); updateDownOrAcross(); highlightClue(\'' + downAcross + '\');" onkeyup= "moveCursor(this, \'' + 
+				 	rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); " onkeyup= "moveCursor(this, \'' + 
 					newRowTxtID + '\', \'' + newColTxtID + '\')" "style="text-transform: lowercase" ' + 'id="' + 
 					txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
@@ -169,6 +169,7 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 		console.log(downClue, acrossClue);
 		var downAcross = String(downClue + ' ' + acrossClue);
 		var rowcol = newRowBox[4] + newRowBox[6];
+		console.log(downAcross);
 		highlightSquares(rowcol, newRowBox);
 		highlightClue(downAcross);
 
@@ -181,6 +182,7 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 		var acrossClue = clueArray[1][newColClue];
 		var downAcross = String(downClue + ' ' + acrossClue);
 		var rowcol = newColBox[4] + newColBox[6];
+		console.log(downAcross);
 		highlightSquares(rowcol, newColBox);
 		highlightClue(downAcross);
 	}
@@ -347,7 +349,8 @@ function highlightClue(downAcross){
 			box.style.border = "none";
 		}
 	}
-	if (downOrAcross == true){
+	console.log(downOrAcross);
+	if (downOrAcross != true){
 		downClue.style.background = "#FFCA55";
 		acrossClue.style.border = "thick solid #FFCA55";
 		clueSelected.push(downID);

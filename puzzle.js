@@ -77,9 +77,6 @@ function initializeScreen(){
 
 
 
-
-
-
 //get the next Row
 function getRowNext(i, j, availableSquares){
 	current = (i * puzzelArrayData.length) + j;
@@ -136,7 +133,35 @@ function getColNext(i, j, availableSquares){
 	return textID;
 
 }
+// setting up to call function based on key input
+// Error: Cannot read properties of null (reading 'focus') -> problem with newRowTxtID
+function keyEvents(event, fromTextBox, newRowBox, newColBox) {
+	if (event.keyCode >= 65 && event.keyCode <= 90){
+    console.log("input was a-z")
+	moveCursor(this, newRowBox ,  newColBox)
+	}
+	switch (event.key) {
+		case "ArrowDown":
+			console.log("ArrowDown");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+		break;
+		case "ArrowUp":
+			console.log("ArrowUp");
+		break;
+		case "ArrowLeft":
+			console.log("ArrowLeft");
+		break;
+		case "ArrowRight":
+			console.log("ArrowRight");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+		break;
+		default:
+			console.log(event.key, event.keyCode);
+		return; 
+	}
 
+	event.preventDefault();
+}
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox){
 	puzzleArray = preparePuzzelArray();
@@ -175,6 +200,44 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 	updateDownOrAcross();
 	
 }
+// duplicate moveCursor for arrow and backspace
+function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox){
+	if(downOrAcross == false){
+		if (event.keyCode == 39){
+			console.log('working right')
+			document.getElementById(newRowBox).focus();
+			rowcol = newRowBox[4] + newRowBox[6];
+			highlightSquares(rowcol, newRowBox);
+		}
+	}
+
+	else if(downOrAcross == true){
+		if (event.keyCode == 40){
+			console.log('working down')
+			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
+		}
+		}
+/*		
+	else if(downOrAcross == false){
+		if (event.keyCode == 37){
+			document.getElementById(newRowBox).focus();
+			rowcol = newRowBox[4] + newRowBox[6];
+			highlightSquares(rowcol, newRowBox)
+		}
+	}
+	else if(downOrAcross == true){
+		if(event.keyCode == 38){
+			document.getElementById(newColBox).focus();
+			rowcol = newColBox[4] + newColBox[6];
+			highlightSquares(rowcol, newColBox);
+		}
+	}
+	*/
+	updateDownOrAcross();	
+	}
+	
 
 // switches downOrAcross
 function updateDownOrAcross(){
@@ -253,9 +316,11 @@ function addHint(){
 function textInputFocus(txtID123){
 	currentTextInput = txtID123;
 }
+
 //Returns Array
 function preparePuzzelArray(){
-	var items = [['0', 's', 'h', 'e', '0'],
+	var items = [
+				['0', 's', 'h', 'e', '0'],
 				['t', 'h', 'a', 't', 's'],
 				['t', 'o', 't', 'e', 's'],
 				['s', 'w', 'e', 'a', 't'],
@@ -539,90 +604,5 @@ function showMenu(){
 function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
-           }			
-
-
-
-
-
-
-
-
-		//    function getRowTxt(i,j, rowData, nextRowData){
-		// 	if(j != rowData.length - 1){
-		// 		if(rowData[j+1] != 0) 
-		// 			var newRowTxtID = String('txt' + '_' + i + '_' + (j+1));
-		// 		else if(j != rowData.length - 2){
-		// 			if(rowData[j+2] != 0) 
-		// 				var newRowTxtID = String('txt' + '_' + i + '_' + (j+2));
-		// 		}
-		// 		else{ 
-		// 			if(nextRowData[0] != 0){
-		// 				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-		// 			}
-		// 			else if (nextRowData[1] != 0)
-		// 				var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
-		// 		}
-		// 	}	
-		// 	else if(j == rowData.length - 1){
-		// 		if(nextRowData[0] != 0){
-		// 			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 0);
-		// 		}
-		// 		else if(nextRowData[1] != 0){
-		// 			var newRowTxtID = String('txt' + '_' + (i+1) + '_' + 1);
-		// 		}
-		// 	}	
-		// 	return newRowTxtID;
-		
-		// }
-		
-// 		// get the next square down
-// function getColTxt(i, j, colData, nextColData){
-// 	if(i != colData.length -1){
-// 		if(colData[i+1] != 0){
-// 			var newColTxtID = String('txt' + '_' + (i+1) + '_' + (j));
-// 		}
-// 		else if(i != colData.length -2){
-// 			if(colData[i+2] != 0 ){
-// 				var newColTxtID = String('txt' + '_' + (i+2) + '_' + (j));
-// 			}
-
-// 			else if(i != colData.length -3){
-// 				if(colData[i+3] != 0){
-// 					var newColTxtID = String('txt' + '_' + (i+3) + '_' + (j));
-// 				}
-// 			}
-// 		}
-// 		else if(i == colData.length -2){
-// 			if(nextColData[0] != 0){
-// 				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-// 			}
-// 			else if(nextColData[1] != 0){
-// 				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-// 			}
-// 		}
-// 	}
-// 	else if(i == colData.length -1){
-// 		if(j < colData.length -1){
-// 			if(nextColData[0] != 0){
-// 				var newColTxtID = String('txt' + '_' + (0) + '_' + (j+1));
-// 			}
-// 			else if(nextColData[1] != 0){
-// 				var newColTxtID = String('txt' + '_' + (1) + '_' + (j+1));
-// 			}
-// 		}
-// 		else if(j == colData.length -1){
-// 			if(nextColData[0] != 0){
-// 				var newColTxtID = String('txt' + '_' + (i+1) + '_' + (0));
-// 			}
-// 		}
-		
-// 	}
-// 	else if(nextColData[1] != 0){
-// 		var newColTxtID = String('txt' + '_' + (i) + '_' + (1));
-// 	}		
-// 	else{
-// 		var newColTxtID = String('txt' + '_' + (i) + '_' + (2));
-// 		}
-// 	return newColTxtID;
-// }
+           }
+			

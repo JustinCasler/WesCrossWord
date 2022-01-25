@@ -66,7 +66,7 @@ function initializeScreen(){
 				var currentTxtID = currentTextInput
 
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
-				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 			}
 			else{
@@ -524,7 +524,12 @@ function highlightClue(downAcross){
 		clueSelected.push(downID);
 		clueSelected.push(acrossID);
 		clueText = downClue.innerHTML
+		
 		document.getElementById("clue-text").innerHTML = clueText;
+		if (clueText.length > 30){
+			document.getElementById("clue-text").style.fontSize = "15px";
+
+		}
 	}
 	else{
 		downClue.style.border = "2px solid #FF5C5C";
@@ -534,6 +539,12 @@ function highlightClue(downAcross){
 		clueSelected.push(acrossID);
 		clueText = acrossClue.innerHTML
 		document.getElementById("clue-text").innerHTML = clueText;
+		if (clueText.length > 30){
+			var fontSizeDifference = String(19 - (Math.floor((clueText.length - 30) / 4)));
+
+			document.getElementById("clue-text").style.fontSize = fontSizeDifference + "px";
+
+		}
 	}
 }
 
@@ -574,13 +585,47 @@ function trackLetter(){
 	tracker = 0
 	for(i =0; i < availableSquares[0].length; i++){
 		if(availableSquares[0][i] == 1){
-			tracker ++
+			tracker ++;
 		}
 	}
 	if(numberOfLetters == tracker){
-		checkClicked()
+		autoCheck();
 	}
 }
+
+
+//checkpuzzle if the puzzle is completed
+function autoCheck(){
+	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		var rowData = puzzelArrayData[i];
+		for(var j = 0 ; j < rowData.length ; j++){
+			if(rowData[j] != 0){
+				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+					var text = document.getElementById('completion-text');
+					text.style.left = "450px";
+					break
+				}		
+			}
+		}
+		stopTimer();
+		var time = document.getElementById('stopwatch');
+		var text = document.getElementById('completion-text');
+		var timeText = time.innerHTML;
+		text.style.left = "450px";
+		text.style.background = "#b3f1ff";
+		text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
+
+
+	}
+}
+
+
+
+
+
+
+
 //Check button
 function checkClicked(){
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
@@ -592,8 +637,11 @@ function checkClicked(){
 						selectedInputTextElement.style.backgroundColor = "#ff8686";
 					}
 					else if(selectedInputTextElement.value != ''){
-						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
+						selectedInputTextElement.style.color = "#0066ff";
+						selectedInputTextElement.style.border = "1px solid #000000";
+						selectedInputTextElement.style.pointerEvents = "none";
 					}
+
 					else{
 						selectedInputTextElement.style.backgroundColor = "none";
 					}	

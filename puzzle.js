@@ -178,6 +178,8 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z")
 	moveCursor(fromTextBox, newRowBox, newColBox);
+	numberOfLetters ++
+	trackLetter()
 	}
 	switch (event.key) {
 		case "ArrowDown":
@@ -297,6 +299,7 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 		else if(event.keyCode == 8){
 			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
 			updateDownOrAcross()
+			numberOfLetters --
 		}
 	}
 	else if(downOrAcross == true){
@@ -323,6 +326,7 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 		else if(event.keyCode == 8){
 			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
 			updateDownOrAcross()
+			numberOfLetters --
 		}
 	}
 	updateDownOrAcross()
@@ -563,7 +567,20 @@ function getNextAvailableSquare(){
 	nextAvailableSquare.push(nextAvailableSquareAcross);
 	return nextAvailableSquare;
 }
-
+//Check on completion 
+numberOfLetters = 0
+function trackLetter(){
+	var availableSquares = getNextAvailableSquare()
+	tracker = 0
+	for(i =0; i < availableSquares[0].length; i++){
+		if(availableSquares[0][i] == 1){
+			tracker ++
+		}
+	}
+	if(numberOfLetters == tracker){
+		checkClicked()
+	}
+}
 //Check button
 function checkClicked(){
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {

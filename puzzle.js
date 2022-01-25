@@ -58,13 +58,13 @@ function initializeScreen(){
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColNext(i, j, availableSquares);
-				console.log(newColTxtID);
-				// var newColTxtID = getColTxt(i, j, colData, nextColData);
 				var newRowTxtID = getRowNext(i, j, availableSquares);
-				// var newRowTxtID = getRowTxt(i, j, rowData, nextRowData);
-				var pastRowTxtID = getPastRowTxt(i, j, rowData, pastRowData);
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\')" onclick="highlightSquares(\''+
-				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				var pastRowTxtID = getPastRowTxt(i, j, availableSquares);
+				var pastColTxtID = getPastColTxt(i, j, availableSquares);
+				var currentTxtID = currentTextInput
+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
 			}
 			else{
 				cell.style.background = "black";
@@ -77,28 +77,22 @@ function initializeScreen(){
 	
 }
 
-
-function getPastRowTxt(i, j, rowData, pastRowData){
-	if(j!= 0){
-		if(rowData[j-1] != 0){
-			var newRowTxtID = String('txt' + '_' + i + '_' + (j-1));
-		}
-		else if(rowData[j-2] != 0){
-			var newRowTxtID = String('txt' + '_' + i + '_' + (j-2));
-		}
-		else if(rowData[j-3] != 0){
-			var newRowTxtID = String('txt' + '_' + i + '_' + (j-3));
+//get the last row
+function getPastRowTxt(i, j, availableSquares){
+	current = (i * puzzelArrayData.length) + j;
+	acrossSquares = availableSquares[1];
+	number = 0;
+	for (var k = 1; k < acrossSquares.length; k++){
+		if(acrossSquares[current - k] == 1){
+			number = current - k;
+			break;
 		}
 	}
-	else if(j == 0){
-		if (pastRowData[4] != 0){
-			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 4);
-		}
-		else if (pastRowData[3] != 0){
-			var newRowTxtID = String('txt' + '_' + (i-1) + '_' + 3);
-		}
-	}
-	return newRowTxtID
+	var row = Math.floor(number / puzzelArrayData.length);
+	var col = number % puzzelArrayData.length;
+	var textID = String('txt' + '_' + row + '_' + col);
+	console.log('past text box: ', textID)
+	return textID;
 }
 
 //get the next Row
@@ -121,12 +115,31 @@ function getRowNext(i, j, availableSquares){
 			}
 		}
 	}
+	
 	var row = Math.floor(number / puzzelArrayData.length);
 	var col = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
 	return textID;
 }
-
+//get last columb 
+function getPastColTxt(i, j, availableSquares){
+	current = (j * puzzelArrayData.length) + i;
+	downSquares = availableSquares[0];
+	console
+	number = 0;
+	for (var k = 1; k < downSquares.length; k++){
+		if(downSquares[current - k] == 1){
+			number = current - k;
+			console.log(number);
+			break;
+		}
+	}
+	var col = Math.floor(number / puzzelArrayData.length);
+	var row = number % puzzelArrayData.length;
+	var textID = String('txt' + '_' + row + '_' + col);
+	console.log(textID);
+	return textID;
+}
 //get the next column
 function getColNext(i, j, availableSquares){
 	current = (j * puzzelArrayData.length) + i;
@@ -157,31 +170,32 @@ function getColNext(i, j, availableSquares){
 
 }
 // setting up to call function based on key input
-function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox) {
+function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID) {
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z")
-	
+	console.log(newRowBox)
 	moveCursor(fromTextBox, newRowBox, newColBox)
 	}
 	switch (event.key) {
 		case "ArrowDown":
 			console.log("ArrowDown");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
 		break;
 		case "ArrowUp":
 			console.log("ArrowUp");
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
 		break;
 		case "ArrowLeft":
 			console.log("ArrowLeft");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
 		break;
 		case "ArrowRight":
 			console.log("ArrowRight");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
 		break;
 		case "Backspace":
 			console.log('Backspace')
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox) 
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
 		break
 		default:
 			console.log(event.key, event.keyCode);
@@ -230,44 +244,39 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 	
 }
 // duplicate moveCursor for arrow and backspace
-function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox){
-	puzzleArray = preparePuzzelArray();
-	clueArray = getClueArray(puzzleArray);
-	var newColClue = (parseInt(newColBox[4]) * puzzleArray.length) + parseInt(newColBox[6]);
-	var newRowClue = (parseInt(newRowBox[4]) * puzzleArray.length) + parseInt(newRowBox[6]);
-	selectedInputTextElement = document.getElementById(fromTextBox)
-	console.log('lastRowBox:', lastRowBox)
+function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox, lastColBox){
+	// statements to switch highlight on 1 arrow press
 	if(downOrAcross == true && event.keyCode == 39){
+		if(newRowBox[4] == currentTextInput[4]){
 		rowcol = newRowBox[4] + newRowBox[6];
-		highlightSquares(rowcol, newRowBox);
-		var downClue = clueArray[0][newColClue];
-		var acrossClue = clueArray[1][newColClue];
-		var downAcross = String(downClue + ' ' + acrossClue);
-		var rowcol = newColBox[4] + newColBox[6];
-		highlightClue(downAcross);
-
+		highlightSquares(rowcol, currentTextInput);
+		}
 	}
 	else if(downOrAcross == true && event.keyCode == 37){
+		if(lastRowBox[4] == currentTextInput[4]){
 		rowcol = lastRowBox[4] + lastRowBox[6];
-		highlightSquares(rowcol, lastRowBox)
-		var downClue = clueArray[0][newColClue];
-		var acrossClue = clueArray[1][newColClue];
-		var downAcross = String(downClue + ' ' + acrossClue);
-		var rowcol = newColBox[4] + newColBox[6];
-		highlightClue(downAcross);
+		highlightSquares(rowcol, currentTextInput)
+		}
 	}
+	if(downOrAcross == false && event.keyCode == 40){
+		if(newColBox[6] == currentTextInput[6]){
+		rowcol = newColBox[4] + newColBox[6];
+		highlightSquares(rowcol, currentTextInput);
+		}
+	}
+	else if(downOrAcross == false && event.keyCode == 38){
+		if(lastColBox[6] == currentTextInput[6]){
+		rowcol = lastColBox[4] + lastColBox[6];
+		highlightSquares(rowcol, currentTextInput);
+		}
+	}
+
 	if(downOrAcross == false){
-		var downClue = clueArray[0][newRowClue];
-		var acrossClue = clueArray[1][newRowClue];
-		console.log(downClue, acrossClue);
-		var downAcross = String(downClue + ' ' + acrossClue);
 		if (event.keyCode == 39){
 			console.log('working right')
 			document.getElementById(newRowBox).focus();
 			rowcol = newRowBox[4] + newRowBox[6];
 			highlightSquares(rowcol, newRowBox);
-			highlightClue(downAcross);
-
 			
 		}
 		else if (event.keyCode == 37){
@@ -275,41 +284,47 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox)
 			document.getElementById(lastRowBox).focus();
 			rowcol = lastRowBox[4] + lastRowBox[6];
 			highlightSquares(rowcol, lastRowBox)
-			highlightClue(downAcross);
 			
 		}
-		else if (event.keyCode == 8 && currentTextInput == ''){
-				console.log('error')
-				console.log('working back')
+		else if (binaryPuzzel[currentTextInput[4]][currentTextInput[6]] == 0){
+			console.log('case 1')
+			if(event.keyCode == 8){
 				document.getElementById(lastRowBox).focus();
-				rowcol = newRowBox[4] + newRowBox[6];
+				rowcol = lastRowBox[4] + lastRowBox[6];
+				console.log('case 2')
 				highlightSquares(rowcol, lastRowBox)
-				highlightClue(downAcross);
+		}}
+		else if(event.keyCode == 8){
+			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
+			updateDownOrAcross()
 		}
 	}
-	if(downOrAcross == false && event.keyCode == 40){
-		rowcol = newColBox[4] + newColBox[6];
-		highlightSquares(rowcol, newColBox);
-	}
-	if(downOrAcross == true){
+	else if(downOrAcross == true){
 		if (event.keyCode == 40){
 			console.log('working down')
-			console.log(lastRowBox)
 			document.getElementById(newColBox).focus();
 			rowcol = newColBox[4] + newColBox[6];
 			highlightSquares(rowcol, newColBox);
 		}
-	}
-
-/*
-	else if(downOrAcross == true){
-		if(event.keyCode == 38){
-			document.getElementById(newColBox).focus();
-			rowcol = newColBox[4] + newColBox[6];
-			highlightSquares(rowcol, newColBox);
+		else if (event.keyCode == 38){
+			console.log('working up')
+			document.getElementById(lastColBox).focus();
+			rowcol = lastColBox[4] + lastColBox[6];
+			highlightSquares(rowcol, lastColBox);
+		}
+		else if (binaryPuzzel[currentTextInput[4]][currentTextInput[6]] == 0){
+			console.log('case 3')
+			if(event.keyCode == 8){
+				document.getElementById(lastColBox).focus();
+				rowcol = lastColBox[4] + lastColBox[6];
+				console.log('case 4')
+				highlightSquares(rowcol, lastColBox)
+		}}
+		else if(event.keyCode == 8){
+			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
+			updateDownOrAcross()
 		}
 	}
-	*/	
 	updateDownOrAcross()
 	}
 
@@ -389,6 +404,23 @@ function addHint(){
 //Stores ID of the selected cell into currentTextInput
 function textInputFocus(txtID123){
 	currentTextInput = txtID123;
+}
+
+// for delete button to know if current input is empty
+binaryPuzzel = [
+	[0,0,0,0,0],
+	[0,0,0,0,0],
+	[0,0,0,0,0],
+	[0,0,0,0,0],
+	[0,0,0,0,0],
+]
+function mappedInput(event){
+	if (event.keyCode >= 65 && event.keyCode <= 90){
+	rowI = currentTextInput[4]
+	colI = currentTextInput[6]
+	binaryPuzzel[rowI][colI] = 1
+	console.log(binaryPuzzel)
+	}
 }
 
 //Returns Array

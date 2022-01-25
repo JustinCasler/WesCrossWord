@@ -596,27 +596,34 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
+	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+				id = ('txt' + '_' + i + '_' + j)
+				squaresList.push(id);	
 				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
 					var text = document.getElementById('completion-text');
 					text.style.left = "450px";
 					break
-				}		
+				}	
 			}
 		}
-		stopTimer();
-		var time = document.getElementById('stopwatch');
-		var text = document.getElementById('completion-text');
-		var timeText = time.innerHTML;
-		text.style.left = "450px";
-		text.style.background = "#b3f1ff";
-		text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
-
-
+	}
+	stopTimer();
+	var time = document.getElementById('stopwatch');
+	var text = document.getElementById('completion-text');
+	var timeText = time.innerHTML;
+	text.style.left = "450px";
+	text.style.background = "#b3f1ff";
+	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
+	for(i = 0; i < squaresList.length; i++){
+		var box = document.getElementById(squaresList[i]);
+		box.style.pointerEvents = "none";
+		box.style.color = "#0066ff";
+		box.style.border = "1px solid #000000";
 	}
 }
 

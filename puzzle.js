@@ -66,7 +66,8 @@ function initializeScreen(){
 				var currentTxtID = currentTextInput
 
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
-				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\');">';
 			}
 			else{
 				cell.style.background = "black";

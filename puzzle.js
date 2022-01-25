@@ -13,17 +13,18 @@ var sec = 0;
 var stoptime = true;
 var clueSelected = [];
 
+
 //Loads the Crossword
 function initializeScreen(){
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
 	var clueArray = []
 	clueArray = getClueArray(puzzelArrayData);
+	console.log(clueArray);
 	var downClues = clueArray[0];
 	var acrossClues = clueArray[1];
 	var availableSquares = getNextAvailableSquare();
 	console.log(availableSquares);
-
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
@@ -55,6 +56,7 @@ function initializeScreen(){
 				var downClue = downClues[(i*rowData.length)+j];
 				var acrossClue = acrossClues[(i*rowData.length)+j];
 				var downAcross = String(downClue + ' ' + acrossClue);
+				console.log(downAcross);
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColNext(i, j, availableSquares);
@@ -64,7 +66,8 @@ function initializeScreen(){
 				var currentTxtID = currentTextInput
 
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
-				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ '); updateDownOrAcross()">';
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\');">';
 			}
 			else{
 				cell.style.background = "black";
@@ -140,6 +143,7 @@ function getPastColTxt(i, j, availableSquares){
 	console.log(textID);
 	return textID;
 }
+
 //get the next column
 function getColNext(i, j, availableSquares){
 	current = (j * puzzelArrayData.length) + i;
@@ -173,8 +177,7 @@ function getColNext(i, j, availableSquares){
 function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID) {
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z")
-	console.log(newRowBox)
-	moveCursor(fromTextBox, newRowBox, newColBox)
+	moveCursor(fromTextBox, newRowBox, newColBox);
 	}
 	switch (event.key) {
 		case "ArrowDown":
@@ -196,12 +199,12 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 		case "Backspace":
 			console.log('Backspace')
 			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			
 		break
 		default:
 			console.log(event.key, event.keyCode);
 		return; 
 	}
-
 	event.preventDefault();
 }
 //goes to the next square
@@ -210,8 +213,6 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 	clueArray = getClueArray(puzzleArray);
 	var newColClue = (parseInt(newColBox[4]) * puzzleArray.length) + parseInt(newColBox[6]);
 	var newRowClue = (parseInt(newRowBox[4]) * puzzleArray.length) + parseInt(newRowBox[6]);
-	console.log(fromTextBox)
-
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
 	if(downOrAcross == false){
@@ -226,7 +227,6 @@ function moveCursor(fromTextBox, newRowBox, newColBox){
 		console.log(downAcross);
 		highlightSquares(rowcol, newRowBox);
 		highlightClue(downAcross);
-
 	}
 	else if(downOrAcross == true){
 		if (length == maxLength){
@@ -425,14 +425,21 @@ function mappedInput(event){
 
 //Returns Array
 function preparePuzzelArray(){
-	var items = [
-				['0', 's', 'h', 'e', '0'],
-				['t', 'h', 'a', 't', 's'],
-				['t', 'o', 't', 'e', 's'],
-				['s', 'w', 'e', 'a', 't'],
-				['0', 's', 'r', 's', '0'],
+	var items2 = [
+				['f', 'o', 's', 's', '0'],
+				['u', 'n', 'i', 't', '0'],
+				['r', 'e', 'r', 'u', 'n'],
+				['0', 'd', 'e', 'n', 'y'],
+				['0', 'r', 'n', 's', 'c'],
 			];
-return items;
+	var items = [
+		['0', 's', 'h', 'e', '0'],
+		['t', 'h', 'a', 't', 's'],
+		['t', 'o', 't', 'e', 's'],
+		['s', 'w', 'e', 'a', 't'],
+		['0', 's', 'r', 's', '0'],
+	];
+return items2;
 }
 //Clear All Button
 function clearAllClicked(){
@@ -498,8 +505,6 @@ function highlightClue(downAcross){
 	downID = String("downClue"+clues[0])
 	downClue = document.getElementById(downID);
 	acrossClue = document.getElementById(acrossID);
-	
-	
 	if(clueSelected.length != 0){
 		for (var i = 0; i < clueSelected.length; i++){
 			var box = document.getElementById(clueSelected[i]);
@@ -510,27 +515,22 @@ function highlightClue(downAcross){
 	console.log(downOrAcross);
 	if (downOrAcross != true){
 		downClue.style.background = "#FFCA55";
-		acrossClue.style.border = "thick solid #FFCA55";
+		downClue.style.border = "2px solid #FFCA55";
+		acrossClue.style.border = "2px solid #FF5C5C";
 		clueSelected.push(downID);
 		clueSelected.push(acrossID);
 		clueText = downClue.innerHTML
-		
 		document.getElementById("clue-text").innerHTML = clueText;
-		
-
 	}
 	else{
-		downClue.style.border = "thick solid #FFCA55";
+		downClue.style.border = "2px solid #FF5C5C";
 		acrossClue.style.background = "#FFCA55";
+		acrossClue.style.border = "2px solid #FFCA55";
 		clueSelected.push(downID);
 		clueSelected.push(acrossID);
 		clueText = acrossClue.innerHTML
 		document.getElementById("clue-text").innerHTML = clueText;
 	}
-	
-	
-
-
 }
 
 //get next available square
@@ -542,9 +542,7 @@ function getNextAvailableSquare(){
 		for(j = 0; j < fullPuzzle[i].length; j++){
 			if(fullPuzzle[i][j] == 0){
 				nextAvailableSquareAcross.push(0);
-				
 			}
-
 			else{
 				nextAvailableSquareAcross.push(1);
 			}
@@ -564,7 +562,6 @@ function getNextAvailableSquare(){
 	nextAvailableSquare.push(nextAvailableSquareDown);
 	nextAvailableSquare.push(nextAvailableSquareAcross);
 	return nextAvailableSquare;
-
 }
 
 //Check button
@@ -582,18 +579,12 @@ function checkClicked(){
 					}
 					else{
 						selectedInputTextElement.style.backgroundColor = "none";
-
-					}
-
-					
-	
-					
-					
-				
+					}	
 			}
 		}
 	}
 }
+
 //Clue Button
 function clueClicked(){
 	if (currentTextInput != null){
@@ -612,7 +603,6 @@ function solveClicked(){
 		var token = temp1.split("_");
 		var row = token[1];
 		var column = token[2];
-		
 		// Print elements on top
 		for(j = row; j >= 0; j--){
 			if(puzzelArrayData[j][column] != 0){
@@ -625,7 +615,6 @@ function solveClicked(){
 				document.getElementById('txt' + '_' + row + '_' + i).value = puzzelArrayData[row][i];
 				}else break;
 		}
-		
 		// Print elements below
 		for(m = row; m< puzzelArrayData.length; m++){
 			if(puzzelArrayData[m][column] != 0){
@@ -639,7 +628,6 @@ function solveClicked(){
 				}else break;
 		}
 		// Done!
-		
 	}
 }
 
@@ -654,7 +642,6 @@ function startTimer() {
         stoptime = false;
         timerCycle();
     }
-	
 }
 
 // stop timer
@@ -711,4 +698,3 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
            }
-			

@@ -66,7 +66,7 @@ function initializeScreen(){
 				var currentTxtID = currentTextInput
 
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
-				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
+				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 			}
 			else{
@@ -178,6 +178,8 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z")
 	moveCursor(fromTextBox, newRowBox, newColBox);
+	numberOfLetters ++
+	trackLetter()
 	}
 	switch (event.key) {
 		case "ArrowDown":
@@ -297,6 +299,7 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 		else if(event.keyCode == 8){
 			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
 			updateDownOrAcross()
+			numberOfLetters --
 		}
 	}
 	else if(downOrAcross == true){
@@ -323,6 +326,7 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 		else if(event.keyCode == 8){
 			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
 			updateDownOrAcross()
+			numberOfLetters --
 		}
 	}
 	updateDownOrAcross()
@@ -531,7 +535,12 @@ function highlightClue(downAcross){
 		clueSelected.push(downID);
 		clueSelected.push(acrossID);
 		clueText = downClue.innerHTML
+		
 		document.getElementById("clue-text").innerHTML = clueText;
+		if (clueText.length > 30){
+			document.getElementById("clue-text").style.fontSize = "15px";
+
+		}
 	}
 	else{
 		downClue.style.border = "2px solid #FF5C5C";
@@ -541,6 +550,12 @@ function highlightClue(downAcross){
 		clueSelected.push(acrossID);
 		clueText = acrossClue.innerHTML
 		document.getElementById("clue-text").innerHTML = clueText;
+		if (clueText.length > 30){
+			var fontSizeDifference = String(19 - (Math.floor((clueText.length - 30) / 4)));
+
+			document.getElementById("clue-text").style.fontSize = fontSizeDifference + "px";
+
+		}
 	}
 }
 
@@ -574,6 +589,60 @@ function getNextAvailableSquare(){
 	nextAvailableSquare.push(nextAvailableSquareAcross);
 	return nextAvailableSquare;
 }
+//Check on completion 
+numberOfLetters = 0
+function trackLetter(){
+	var availableSquares = getNextAvailableSquare()
+	tracker = 0
+	for(i =0; i < availableSquares[0].length; i++){
+		if(availableSquares[0][i] == 1){
+			tracker ++;
+		}
+	}
+	if(numberOfLetters == tracker){
+		autoCheck();
+	}
+}
+
+
+//checkpuzzle if the puzzle is completed
+function autoCheck(){
+	var squaresList = [];
+	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		var rowData = puzzelArrayData[i];
+		for(var j = 0 ; j < rowData.length ; j++){
+			if(rowData[j] != 0){
+				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+				id = ('txt' + '_' + i + '_' + j)
+				squaresList.push(id);	
+				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+					var text = document.getElementById('completion-text');
+					text.style.left = "450px";
+					break
+				}	
+			}
+		}
+	}
+	stopTimer();
+	var time = document.getElementById('stopwatch');
+	var text = document.getElementById('completion-text');
+	var timeText = time.innerHTML;
+	text.style.left = "450px";
+	text.style.background = "#b3f1ff";
+	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
+	for(i = 0; i < squaresList.length; i++){
+		var box = document.getElementById(squaresList[i]);
+		box.style.pointerEvents = "none";
+		box.style.color = "#0066ff";
+		box.style.border = "1px solid #000000";
+	}
+}
+
+
+
+
+
+
 
 //Check button
 function checkClicked(){
@@ -586,8 +655,11 @@ function checkClicked(){
 						selectedInputTextElement.style.backgroundColor = "#ff8686";
 					}
 					else if(selectedInputTextElement.value != ''){
-						selectedInputTextElement.style.backgroundColor = "#b3f1ff";
+						selectedInputTextElement.style.color = "#0066ff";
+						selectedInputTextElement.style.border = "1px solid #000000";
+						selectedInputTextElement.style.pointerEvents = "none";
 					}
+
 					else{
 						selectedInputTextElement.style.backgroundColor = "none";
 					}	

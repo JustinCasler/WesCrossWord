@@ -12,12 +12,14 @@ var min = 0;
 var sec = 0;
 var stoptime = true;
 var clueSelected = [];
-
+var puzzleChecked = false;
 
 //Loads the Crossword
 function initializeScreen(){
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
+	
+
 	var clueArray = []
 	clueArray = getClueArray(puzzelArrayData);
 	console.log(clueArray);
@@ -630,6 +632,9 @@ function autoCheck(){
 	text.style.left = "450px";
 	text.style.background = "#b3f1ff";
 	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
+	if(puzzleChecked == true){
+		text.style.color = "#0066ff";
+	}
 	for(i = 0; i < squaresList.length; i++){
 		var box = document.getElementById(squaresList[i]);
 		box.style.pointerEvents = "none";
@@ -646,6 +651,9 @@ function autoCheck(){
 
 //Check button
 function checkClicked(){
+	puzzleChecked = true;
+	var timer = document.getElementById('stopwatch');
+	timer.style.color = "#0066ff";
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
@@ -676,11 +684,13 @@ function clueClicked(){
 		var row = token[1];
 		var column = token[2];
 		document.getElementById(temp1).value = puzzelArrayData[row][column];
-		//checkClicked();
 	}
 }
 //Solve Button
 function solveClicked(){
+	puzzleChecked = true;
+	var timer = document.getElementById('stopwatch');
+	timer.style.color = "#0066ff";
 	if (currentTextInput != null){
 		var temp1 = currentTextInput;
 		var token = temp1.split("_");

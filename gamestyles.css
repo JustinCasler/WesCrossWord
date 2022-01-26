@@ -8,14 +8,13 @@
 	position: absolute;
 	top: 290px;
 	left: 100px;
-	width : auto;
 	border-collapse: collapse;
 	border: 1px solid black;
 	
 }
 .inputBox{
 	width: 60px;
-	height:60px;
+	height: 60px;
 	border: 1px solid ;
 	text-align: center;
 	transition: all 0.5s;

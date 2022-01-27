@@ -322,16 +322,16 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 			if(event.keyCode == 8){
 				document.getElementById(lastColBox).focus();
 				rowcol = lastColBox[4] + lastColBox[6];
-				console.log('case 4')
-				highlightSquares(rowcol, lastColBox)
+				console.log('case 4');
+				highlightSquares(rowcol, lastColBox);
 		}}
 		else if(event.keyCode == 8){
-			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
-			updateDownOrAcross()
-			numberOfLetters --
+			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0;
+			updateDownOrAcross();
+			numberOfLetters --;
 		}
 	}
-	updateDownOrAcross()
+	updateDownOrAcross();
 	}
 
 // switches downOrAcross

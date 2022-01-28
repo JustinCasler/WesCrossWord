@@ -15,12 +15,14 @@ var min = 0;
 var sec = 0;
 var stoptime = true;
 var clueSelected = [];
-
+var puzzleChecked = false;
 
 //Loads the Crossword
 function initializeScreen(){
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
+	
+
 	var clueArray = []
 	clueArray = getClueArray(puzzelArrayData);
 	console.log(clueArray);
@@ -332,16 +334,16 @@ function moveCursorIfBlank(event, fromTextBox, newRowBox, newColBox, lastRowBox,
 			if(event.keyCode == 8){
 				document.getElementById(lastColBox).focus();
 				rowcol = lastColBox[4] + lastColBox[6];
-				console.log('case 4')
-				highlightSquares(rowcol, lastColBox)
+				console.log('case 4');
+				highlightSquares(rowcol, lastColBox);
 		}}
 		else if(event.keyCode == 8){
-			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0
-			updateDownOrAcross()
-			numberOfLetters --
+			binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 0;
+			updateDownOrAcross();
+			numberOfLetters --;
 		}
 	}
-	updateDownOrAcross()
+	updateDownOrAcross();
 	}
 
 // switches downOrAcross
@@ -455,6 +457,17 @@ function preparePuzzelArray(){
 		['s', 'w', 'e', 'a', 't'],
 		['0', 's', 'r', 's', '0'],
 	];
+
+	var items3 = [
+		['0', '0', '0', 'n', 'u', 'd', 'e'],
+		['0', '0', 'b', 'o', 'n', 'u', 's'],
+		['0', 'd', 'o', 'o', 'w', 'o', 'p'],
+		['c', 'o', 'n', 'd', 'e', 'm', 'n'],
+		['a', 'p', 'o', 'l', 'l', 'o', '0'],
+		['r', 'e', 'b', 'e', 'l', '0', '0'],
+		['e', 'r', 'o', 's', '0', '0', '0'],
+	];
+
 return items2;
 }
 //Clear All Button
@@ -673,21 +686,33 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
+	var breaker = false;
 	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		if(breaker == true){
+			break;
+		}
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-				id = ('txt' + '_' + i + '_' + j)
-				squaresList.push(id);	
-				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+				
+				if(selectedInputTextElement.value == puzzelArrayData[i][j]){
+					id = ('txt' + '_' + i + '_' + j)
+					squaresList.push(id);
+					
+				}
+				else{
 					var text = document.getElementById('completion-text');
 					text.style.left = "450px";
-					break
-				}	
+					breaker = true;
+				}
+
 			}
 		}
+	}
+	if(breaker == true){
+		return;
 	}
 	stopTimer();
 	var time = document.getElementById('stopwatch');
@@ -696,6 +721,9 @@ function autoCheck(){
 	text.style.left = "450px";
 	text.style.background = "#b3f1ff";
 	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
+	if(puzzleChecked == true){
+		text.style.color = "#0066ff";
+	}
 	for(i = 0; i < squaresList.length; i++){
 		var box = document.getElementById(squaresList[i]);
 		box.style.pointerEvents = "none";
@@ -712,6 +740,9 @@ function autoCheck(){
 
 //Check button
 function checkClicked(){
+	puzzleChecked = true;
+	var timer = document.getElementById('stopwatch');
+	timer.style.color = "#0066ff";
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
@@ -742,11 +773,13 @@ function clueClicked(){
 		var row = token[1];
 		var column = token[2];
 		document.getElementById(temp1).value = puzzelArrayData[row][column];
-		//checkClicked();
 	}
 }
 //Solve Button
 function solveClicked(){
+	puzzleChecked = true;
+	var timer = document.getElementById('stopwatch');
+	timer.style.color = "#0066ff";
 	if (currentTextInput != null){
 		var temp1 = currentTextInput;
 		var token = temp1.split("_");

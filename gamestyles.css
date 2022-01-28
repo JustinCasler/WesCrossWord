@@ -8,14 +8,13 @@
 	position: absolute;
 	top: 290px;
 	left: 100px;
-	width : auto;
 	border-collapse: collapse;
 	border: 1px solid black;
 	
 }
 .inputBox{
 	width: 60px;
-	height:60px;
+	height: 60px;
 	border: 1px solid ;
 	text-align: center;
 	transition: all 0.5s;
@@ -68,9 +67,9 @@ input[type="text"]
 	
 }
 #hintsTable td{
-	border: none;
+	border: 2px solid white;
 	padding: 5px;
-	transition: all .3s ease-in-out;
+	/* transition: all .3s ease-in-out; */
 }
 #hintsTable td:hover{
 	background: #b3f1ff;
@@ -382,4 +381,68 @@ nav{
 	.nav-links ul{
 	   padding: 30px;
 	}
+
+	.toolbar{
+		position: absolute;
+		flex: 1;
+		text-align: center;
+		top: 620px;
+		left: 100px;
+	}
+	.check-button{
+		background : #FFB3B3;
+		padding: 12px 13px;
+		border: none;
+	  }
+	  
+	  .solve-button{ 
+		background : #F49F9F;
+		padding: 12px 13px;
+		border: none; 
+	  }
+	   .clue-button{
+		background : #F49292;
+		padding: 12px 13px; 
+		border: none;
+	  }
+	  
+	  .clear-button{
+		background : #FF5C5C;
+		padding: 12px 13px;
+		border: none;
+	  }
+	
+	 .pencil-button{
+		background : #EA8193;
+		padding: 12px 13px; 
+		border: none;
+	  }
+	  #hintsTable{
+		display:flex;
+		position: absolute;
+		left: 100px;
+		top: 670px;
+		font-size: 13px;
+		font-family : Source Sans Pro;
+		font-weight : bold;
+		color : #000000;
+		padding-bottom: 50px;
+		
+		
+	}
+
+
+	#hintsTable td{
+		flex-basis: 33.33%;
+		border: 2px solid white;
+		/* transition: all .3s ease-in-out; */
+	}
+	
+
+
+
+
+
+
+
   }

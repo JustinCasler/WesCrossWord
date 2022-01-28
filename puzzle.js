@@ -456,7 +456,7 @@ function preparePuzzelArray(){
 		['e', 'r', 'o', 's', '0', '0', '0'],
 	];
 
-return items3;
+return items2;
 }
 //Clear All Button
 function clearAllClicked(){

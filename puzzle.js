@@ -21,15 +21,11 @@ var puzzleChecked = false;
 function initializeScreen(){
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelArrayData = preparePuzzelArray();
-	
-
 	var clueArray = []
 	clueArray = getClueArray(puzzelArrayData);
-	console.log(clueArray);
 	var downClues = clueArray[0];
 	var acrossClues = clueArray[1];
 	var availableSquares = getNextAvailableSquare();
-	console.log(availableSquares);
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
 		var rowData = puzzelArrayData[i]
@@ -61,7 +57,6 @@ function initializeScreen(){
 				var downClue = downClues[(i*rowData.length)+j];
 				var acrossClue = acrossClues[(i*rowData.length)+j];
 				var downAcross = String(downClue + ' ' + acrossClue);
-				console.log(downAcross);
 				var txtID = String('txt' + '_' + i + '_' + j);
 				var rowcol = String(i) + String(j);
 				var newColTxtID = getColNext(i, j, availableSquares);
@@ -75,7 +70,6 @@ function initializeScreen(){
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID)
 					assignImage(txtID)
-					console.log('imageTextID: ', imageTextID)
 				}
 				else{
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
@@ -108,7 +102,6 @@ function getPastRowTxt(i, j, availableSquares){
 	var row = Math.floor(number / puzzelArrayData.length);
 	var col = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
-	console.log('past text box: ', textID)
 	return textID;
 }
 
@@ -142,19 +135,16 @@ function getRowNext(i, j, availableSquares){
 function getPastColTxt(i, j, availableSquares){
 	current = (j * puzzelArrayData.length) + i;
 	downSquares = availableSquares[0];
-	console
 	number = 0;
 	for (var k = 1; k < downSquares.length; k++){
 		if(downSquares[current - k] == 1){
 			number = current - k;
-			console.log(number);
 			break;
 		}
 	}
 	var col = Math.floor(number / puzzelArrayData.length);
 	var row = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
-	console.log(textID);
 	return textID;
 }
 
@@ -162,12 +152,11 @@ function getPastColTxt(i, j, availableSquares){
 function getColNext(i, j, availableSquares){
 	current = (j * puzzelArrayData.length) + i;
 	downSquares = availableSquares[0];
-	console
 	number = 0;
 	for (var k = 1; k < downSquares.length; k++){
 		if(downSquares[current + k] == 1){
 			number = current + k;
-			console.log(number);
+
 			break;
 		}
 		else if(current+k == downSquares.length){
@@ -183,40 +172,39 @@ function getColNext(i, j, availableSquares){
 	var col = Math.floor(number / puzzelArrayData.length);
 	var row = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
-	console.log(textID);
 	return textID;
 
 }
 // setting up to call function based on key input
 function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID) {
 	if (event.keyCode >= 65 && event.keyCode <= 90){
-    console.log("input was a-z")
+    console.log("input was a-z");
 	moveCursor(fromTextBox, newRowBox, newColBox);
-	numberOfLetters ++
-	trackLetter()
+	numberOfLetters ++;
+	trackLetter();
 	}
 	switch (event.key) {
 		case "ArrowDown":
 			console.log("ArrowDown");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
 		case "ArrowUp":
 			console.log("ArrowUp");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
 		case "ArrowLeft":
 			console.log("ArrowLeft");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
 		case "ArrowRight":
 			console.log("ArrowRight");
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
 		case "Backspace":
-			console.log('Backspace')
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox)
+			console.log('Backspace');
+			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 			
-		break
+		break;
 		default:
 			console.log(event.key, event.keyCode);
 		return; 
@@ -225,36 +213,17 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 }
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox){
-	puzzleArray = preparePuzzelArray();
-	clueArray = getClueArray(puzzleArray);
-	var newColClue = (parseInt(newColBox[4]) * puzzleArray.length) + parseInt(newColBox[6]);
-	var newRowClue = (parseInt(newRowBox[4]) * puzzleArray.length) + parseInt(newRowBox[6]);
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
 	if(downOrAcross == false){
 		if (length == maxLength){
 			document.getElementById(newRowBox).focus();
 		}
-		var downClue = clueArray[0][newRowClue];
-		var acrossClue = clueArray[1][newRowClue];
-		console.log(downClue, acrossClue);
-		var downAcross = String(downClue + ' ' + acrossClue);
-		var rowcol = newRowBox[4] + newRowBox[6];
-		console.log(downAcross);
-		highlightSquares(rowcol, newRowBox);
-		highlightClue(downAcross);
 	}
 	else if(downOrAcross == true){
 		if (length == maxLength){
 			document.getElementById(newColBox).focus();
 		}
-		var downClue = clueArray[0][newColClue];
-		var acrossClue = clueArray[1][newColClue];
-		var downAcross = String(downClue + ' ' + acrossClue);
-		var rowcol = newColBox[4] + newColBox[6];
-		console.log(downAcross);
-		highlightSquares(rowcol, newColBox);
-		highlightClue(downAcross);
 	}
 	updateDownOrAcross();
 	
@@ -434,10 +403,9 @@ binaryPuzzel = [
 ]
 function mappedInput(event){
 	if (event.keyCode >= 65 && event.keyCode <= 90){
-	rowI = currentTextInput[4]
-	colI = currentTextInput[6]
-	binaryPuzzel[rowI][colI] = 1
-	console.log(binaryPuzzel)
+	rowI = currentTextInput[4];
+	colI = currentTextInput[6];
+	binaryPuzzel[rowI][colI] = 1;
 	}
 }
 
@@ -520,7 +488,6 @@ function highlightSquares(rowcol, squareID){
 				if (selectedSquare.classList.contains('numberedBox')){
 					for(i = 0; i <= imageTextID.length; i++){
 						if(imageTextID[i] == txtID){
-							console.log('imageTextID[i]: ', imageTextID[i] +' i: ', i+1)
 							selectedSquare.style.background = "#b3f1ff";
 							selectedSquare.style.backgroundImage = imageArray[i];
 							selectedSquare.style.zIndex = "5";
@@ -606,7 +573,6 @@ function highlightClue(downAcross){
 			box.style.border = "none";
 		}
 	}
-	console.log(downOrAcross);
 	if (downOrAcross != true){
 		downClue.style.background = "#FFCA55";
 		downClue.style.border = "2px solid #FFCA55";
@@ -618,7 +584,6 @@ function highlightClue(downAcross){
 		document.getElementById("clue-text").innerHTML = clueText;
 		if (clueText.length > 30){
 			document.getElementById("clue-text").style.fontSize = "15px";
-
 		}
 	}
 	else{
@@ -678,7 +643,7 @@ function trackLetter(){
 			tracker ++;
 		}
 	}
-	if(numberOfLetters == tracker){
+	if(numberOfLetters >= tracker){
 		autoCheck();
 	}
 }
@@ -798,9 +763,7 @@ function solveClicked(){
 			for(i = 0; i < puzzelArrayData.length; i++){
 				if(puzzelArrayData[i][column] != 0){
 					var box = document.getElementById('txt' + '_' + i + '_' + column);
-					console.log(box.value)
 					if(box.value == ""){
-						console.log(box.value)
 						lettersAdded ++;
 					}
 					box.value = puzzelArrayData[i][column];
@@ -830,7 +793,6 @@ function solveClicked(){
 			// Done!
 	}
 	numberOfLetters = numberOfLetters + lettersAdded;
-	console.log(numberOfLetters);
 }
 
 

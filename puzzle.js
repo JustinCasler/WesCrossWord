@@ -70,7 +70,7 @@ function initializeScreen(){
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
-					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID)
@@ -78,7 +78,7 @@ function initializeScreen(){
 					console.log('imageTextID: ', imageTextID)
 				}
 				else{
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 				}
@@ -669,7 +669,7 @@ function getNextAvailableSquare(){
 	return nextAvailableSquare;
 }
 //Check on completion 
-numberOfLetters = 0
+var numberOfLetters = 0
 function trackLetter(){
 	var availableSquares = getNextAvailableSquare()
 	tracker = 0
@@ -748,18 +748,18 @@ function checkClicked(){
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-					if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
-						selectedInputTextElement.style.backgroundColor = "#ff8686";
-					}
-					else if(selectedInputTextElement.value != ''){
-						selectedInputTextElement.style.color = "#0066ff";
-						selectedInputTextElement.style.border = "1px solid #000000";
-						selectedInputTextElement.style.pointerEvents = "none";
-					}
+				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+					selectedInputTextElement.style.backgroundColor = "#ff8686";
+				}
+				else if(selectedInputTextElement.value != ''){
+					selectedInputTextElement.style.color = "#0066ff";
+					selectedInputTextElement.style.border = "1px solid #000000";
+					selectedInputTextElement.style.pointerEvents = "none";
+				}
 
-					else{
-						selectedInputTextElement.style.backgroundColor = "none";
-					}	
+				else{
+					selectedInputTextElement.style.backgroundColor = "none";
+				}	
 			}
 		}
 	}
@@ -772,7 +772,15 @@ function clueClicked(){
 		var token = temp1.split("_");
 		var row = token[1];
 		var column = token[2];
-		document.getElementById(temp1).value = puzzelArrayData[row][column];
+		var box = document.getElementById(temp1);
+		if(box.value == ''){
+			numberOfLetters ++;
+		}
+		box.value = puzzelArrayData[row][column];
+		box.style.color = "#0066ff";
+		box.style.border = "1px solid #000000";
+		box.style.pointerEvents = "none";
+
 	}
 }
 //Solve Button
@@ -780,37 +788,49 @@ function solveClicked(){
 	puzzleChecked = true;
 	var timer = document.getElementById('stopwatch');
 	timer.style.color = "#0066ff";
+	var lettersAdded = 0;
 	if (currentTextInput != null){
 		var temp1 = currentTextInput;
 		var token = temp1.split("_");
 		var row = token[1];
 		var column = token[2];
-		// Print elements on top
-		for(j = row; j >= 0; j--){
-			if(puzzelArrayData[j][column] != 0){
-				document.getElementById('txt' + '_' + j + '_' + column).value = puzzelArrayData[j][column];
-				}else break;
+		if(downOrAcross == true){
+			for(i = 0; i < puzzelArrayData.length; i++){
+				if(puzzelArrayData[i][column] != 0){
+					var box = document.getElementById('txt' + '_' + i + '_' + column);
+					console.log(box.value)
+					if(box.value == ""){
+						console.log(box.value)
+						lettersAdded ++;
+					}
+					box.value = puzzelArrayData[i][column];
+					box.style.color = "#0066ff";
+					box.style.border = "1px solid #000000";
+					box.style.pointerEvents = "none";
+					
+				}
+			}
 		}
-		// Print elements on right
-		for(i = column; i< puzzelArrayData[row].length; i++){
-			if(puzzelArrayData[row][i] != 0){
-				document.getElementById('txt' + '_' + row + '_' + i).value = puzzelArrayData[row][i];
-				}else break;
+		else{
+			// Print elements on right
+			for(j = 0; j < puzzelArrayData.length; j++){
+				if(puzzelArrayData[row][j] != 0){
+					var box = document.getElementById('txt' + '_' + row + '_' + j);
+					if(box.value == ""){
+						lettersAdded ++;
+					}
+					box.value = puzzelArrayData[row][j];
+					box.style.color = "#0066ff";
+					box.style.border = "1px solid #000000";
+					box.style.pointerEvents = "none";
+				}
+			}
+			
 		}
-		// Print elements below
-		for(m = row; m< puzzelArrayData.length; m++){
-			if(puzzelArrayData[m][column] != 0){
-				document.getElementById('txt' + '_' + m + '_' + column).value = puzzelArrayData[m][column];
-				}else break;
-		}
-		// Print elements on left
-		for(k = column; k >= 0; k--){
-			if(puzzelArrayData[row][k] != 0){
-				document.getElementById('txt' + '_' + row + '_' + k).value = puzzelArrayData[row][k];
-				}else break;
-		}
-		// Done!
+			// Done!
 	}
+	numberOfLetters = numberOfLetters + lettersAdded;
+	console.log(numberOfLetters);
 }
 
 

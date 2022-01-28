@@ -63,13 +63,13 @@ function initializeScreen(){
 				var newRowTxtID = getRowNext(i, j, availableSquares);
 				var pastRowTxtID = getPastRowTxt(i, j, availableSquares);
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
-				var currentTxtID = currentTextInput
+				var currentTxtID = currentTextInput;
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
 					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
-					imageTextID.push(txtID)
-					assignImage(txtID)
+					imageTextID.push(txtID);
+					assignImage(txtID);
 				}
 				else{
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
@@ -83,6 +83,26 @@ function initializeScreen(){
 		}
 		
 	}
+	var sizeCoefficient = String(300/(puzzelArrayData.length)) + "px";
+	var squares = document.getElementsByClassName("numberedBox");
+	var boxes = document.getElementsByClassName("inputBox");
+	for(i in squares){
+		if(squares[i].id != undefined){
+			console.log(squares[i].id);
+			squares[i].style.width = sizeCoefficient;
+			squares[i].style.height = sizeCoefficient;
+		}
+		
+	}
+	for(i in boxes){
+		if(boxes[i].id != undefined){
+			boxes[i].style.width = sizeCoefficient;
+			boxes[i].style.height = sizeCoefficient;
+		}
+	}
+	
+
+	
 	startTimer();
 	// addHint();
 	
@@ -436,7 +456,7 @@ function preparePuzzelArray(){
 		['e', 'r', 'o', 's', '0', '0', '0'],
 	];
 
-return items2;
+return items3;
 }
 //Clear All Button
 function clearAllClicked(){

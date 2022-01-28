@@ -25,6 +25,7 @@ function initializeScreen(){
 	clueArray = getClueArray(puzzelArrayData);
 	var downClues = clueArray[0];
 	var acrossClues = clueArray[1];
+	changeClueIds(downClues, acrossClues);
 	var availableSquares = getNextAvailableSquare();
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
 		var row = puzzelTable.insertRow(-1);
@@ -431,6 +432,15 @@ function mappedInput(event){
 
 //Returns Array
 function preparePuzzelArray(){
+	var hash = "foss0unit0rerun0deny0rnsc";
+	var puzzelArray = getPuzzleArrayFromHash(hash);
+	var blank = [
+		[ , , , , ,],
+		[ , , , , ,],
+		[ , , , , ,],
+		[ , , , , ,],
+		[ , , , , ,],
+	]
 	var items2 = [
 				['f', 'o', 's', 's', '0'],
 				['u', 'n', 'i', 't', '0'],
@@ -455,8 +465,9 @@ function preparePuzzelArray(){
 		['r', 'e', 'b', 'e', 'l', '0', '0'],
 		['e', 'r', 'o', 's', '0', '0', '0'],
 	];
+	
 
-return items2;
+return puzzelArray;
 }
 //Clear All Button
 function clearAllClicked(){
@@ -464,6 +475,21 @@ function clearAllClicked(){
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelTable.innerHTML = '';
     initializeScreen();
+}
+
+
+//generates array from hash
+function getPuzzleArrayFromHash(hash){
+	var array = [];
+	var code = hash;
+	arrayLength = Math.sqrt(code.length);
+	for (var i = 0; i < arrayLength; i++){
+		array.push([]);
+		for (var j = 0; j < arrayLength; j++){
+			array[i].push(code[(i*arrayLength) + j]);
+		}
+	}
+	return array;
 }
 
 //Highlight the selected squares and row/column
@@ -665,8 +691,77 @@ function trackLetter(){
 	}
 	if(numberOfLetters >= tracker){
 		autoCheck();
+		getBoardHash();
 	}
 }
+
+
+function getDate(){
+	var today = new Date();
+	var dd = String(today.getDate());
+	var mm = String(today.getMonth() + 1) //January is 0!
+	var yyyy = today.getFullYear();
+	today = mm + '/' + dd + '/' + yyyy;
+	return today;
+
+}
+
+
+
+//get a hash of the current board
+function getBoardHash(){
+	var board = preparePuzzelArray();
+	var boardHash = "";
+	for(i = 0; i < board.length; i++){
+		for(j = 0; j < board[i].length; j++){
+			var txtID = String('txt' + '_' + i + '_' + j);
+			if(board[i][j] != 0){
+				var txt = document.getElementById(txtID).value;
+				console.log(txt);
+				boardHash += txt;
+			}
+			else{
+				boardHash += "0";
+			}
+		}
+	}
+	console.log(boardHash);
+	return boardHash;
+}
+
+
+
+
+//assign ids to the clues
+function changeClueIds(downClues, acrossClues){
+	downClueList = [];
+	acrossClueList = [];
+	for(i = 0; i < downClues.length; i++){
+		if(downClueList.includes(downClues[i]) == false){
+			downClueList.push(downClues[i]);
+		}
+		downClueList.splice(0)
+	}
+	for(i = 0; i < acrossClues.length; i++){
+		if(acrossClueList.includes(acrossClues[i]) == false){
+			acrossClueList.push(acrossClues[i]);
+		}
+		acrossClueList.splice(0)
+	}
+	console.log(downClueList, acrossClueList);
+	for (var i = 1; i < downClueList.length; i++){
+		newDownID = String("downClue" + downClueList[i]);
+		newAcrossID = String("acrossClue" + acrossClueList[i]);
+		oldDownID = String("downClue" + i);
+		oldAcrossID = String("acrossClue" + i);
+		document.getElementById(oldDownID).id = newDownID;
+		document.getElementById(oldAcrossID).id = newAcrossID;
+	}
+}
+	
+
+
+
 
 
 //checkpuzzle if the puzzle is completed
@@ -882,3 +977,12 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-200px";
            }
+
+
+
+
+//EXCEL
+var workbook = new Excel.Workbook();
+workbook.xlsx.readFile("crosswordpuzzle/Crossword_Archive.xlsx").then(function () {
+	var worksheet=workbook.getWorksheet('Sheet1');
+});

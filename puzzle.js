@@ -609,21 +609,33 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
+	var breaker = false;
 	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		if(breaker == true){
+			break;
+		}
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-				id = ('txt' + '_' + i + '_' + j)
-				squaresList.push(id);	
-				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+				
+				if(selectedInputTextElement.value == puzzelArrayData[i][j]){
+					id = ('txt' + '_' + i + '_' + j)
+					squaresList.push(id);
+					
+				}
+				else{
 					var text = document.getElementById('completion-text');
 					text.style.left = "450px";
-					break
-				}	
+					breaker = true;
+				}
+
 			}
 		}
+	}
+	if(breaker == true){
+		return;
 	}
 	stopTimer();
 	var time = document.getElementById('stopwatch');

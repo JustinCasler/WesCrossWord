@@ -22,7 +22,29 @@
 	outline: none;
 	background: none;
 }
+.numberedBox{
+	width: 60px;
+	height:60px;
+	border: 1px solid ;
+	text-align: center;
+	transition: all 0.5s;
+	outline: none;
+	background: none;
+	z-index: 5;
+	position: left;
+	background-size:12px;
+	background-repeat: no-repeat;
+	
+}
 
+.numberedBox:hover{
+	background: #FFCA55;
+	z-index: 5;
+	background-image: url(WesleyanLogo.png);
+	position: left;
+	background-size:12px;
+	background-repeat: no-repeat;
+}
 input[type="text"]
 {
     font-family: Source Sans Pro;

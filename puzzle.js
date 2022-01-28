@@ -2,6 +2,9 @@
 var currentTextInput;
 var puzzelArrayData;
 var squaresSelected = [];
+var imageArray = ["url(number1.png)", "url(number2.png)", "url(number3.png)", "url(number4.png)", "url(number5.png)",
+	"url(number6.png)", "url(number7.png)", "url(number8.png)", "url(number9.png)"]
+var imageTextID = []
 // true = down, false = across
 var downOrAcross = false;
 const timer = document.getElementById('stopwatch');
@@ -66,10 +69,19 @@ function initializeScreen(){
 				var pastRowTxtID = getPastRowTxt(i, j, availableSquares);
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput
-
+				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
+					rowcol + '\' , \'' + txtID + '\');">';
+					imageTextID.push(txtID)
+					assignImage(txtID)
+					console.log('imageTextID: ', imageTextID)
+				}
+				else{
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onKeyDown = "mappedInput(event)"; onKeyUp = "keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
+				}
 			}
 			else{
 				cell.style.background = "black";
@@ -471,7 +483,21 @@ function highlightSquares(rowcol, squareID){
 	if(squaresSelected.length != 0){
 		for(t = 0; t < squaresSelected.length; t++){
 			var box = document.getElementById(squaresSelected[t]);
-			box.style.background = "none";
+			if (box.classList.contains('numberedBox')){
+				for(i = 0; i <= imageTextID.length; i++){
+					if(imageTextID[i] == squaresSelected[t]){
+						box.style.background = "none";
+						box.style.backgroundImage = imageArray[i];
+						box.style.zIndex = "5";
+						box.style.position = "left";
+						box.style.backgroundSize = "12px";
+						box.style.backgroundRepeat = "no-repeat";
+					}
+				}
+			}
+			else{
+				box.style.background = "none";
+			}
 		}
 		for(t = 0; t < squaresSelected.length; t++){
 			squaresSelected.pop();
@@ -491,7 +517,22 @@ function highlightSquares(rowcol, squareID){
 			if (rowData[l] != 0){
 				var txtID = String('txt' + '_' + row + '_' + l)
 				var selectedSquare = document.getElementById(txtID);
-				selectedSquare.style.background = "#b3f1ff";
+				if (selectedSquare.classList.contains('numberedBox')){
+					for(i = 0; i <= imageTextID.length; i++){
+						if(imageTextID[i] == txtID){
+							console.log('imageTextID[i]: ', imageTextID[i] +' i: ', i+1)
+							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.backgroundImage = imageArray[i];
+							selectedSquare.style.zIndex = "5";
+							selectedSquare.style.position = "left";
+							selectedSquare.style.backgroundSize = "12px";
+							selectedSquare.style.backgroundRepeat = "no-repeat";
+						}
+					}
+				}
+				else{
+					selectedSquare.style.background = "#b3f1ff";
+				}
 				squaresSelected.push(txtID);
 			}
 
@@ -502,7 +543,21 @@ function highlightSquares(rowcol, squareID){
 			if (colData[l] != 0){
 				var txtID = String('txt' + '_' + l + '_' + col)
 				var selectedSquare = document.getElementById(txtID);
-				selectedSquare.style.background = "#b3f1ff";
+				if (selectedSquare.classList.contains('numberedBox')){
+					for(i = 0; i <= imageTextID.length; i++){
+						if(imageTextID[i] == txtID){
+							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.backgroundImage = imageArray[i];
+							selectedSquare.style.zIndex = "5";
+							selectedSquare.style.position = "left";
+							selectedSquare.style.backgroundSize = "12px";
+							selectedSquare.style.backgroundRepeat = "no-repeat";
+						}
+					}
+				}
+				else{
+					selectedSquare.style.background = "#b3f1ff";
+				}
 				squaresSelected.push(txtID);
 			}
 
@@ -511,8 +566,30 @@ function highlightSquares(rowcol, squareID){
 
 	}
 	var selectedSquare = document.getElementById(squareID);
-	selectedSquare.style.background = "#FFCA55";
+	if (selectedSquare.classList.contains('numberedBox')){
+		for(i = 0; i <= imageTextID.length; i++){
+			if(imageTextID[i] == squareID){
+				selectedSquare.style.background = "#FFCA55";
+				selectedSquare.style.backgroundImage = imageArray[i];
+				selectedSquare.style.zIndex = "5";
+				selectedSquare.style.position = "left";
+				selectedSquare.style.backgroundSize = "12px";
+				selectedSquare.style.backgroundRepeat = "no-repeat";
+			}
+		}
+	}
+	else{
+		selectedSquare.style.background = "#FFCA55";
+	}
+}
 
+//puts the correct numbers in the top left courner
+counter = 0
+function assignImage(squareID){
+	var imageCell = document.getElementById(squareID)
+	var imageUrl = "url(number1.png)"
+	imageCell.style.backgroundImage = imageArray[counter]
+	counter ++
 }
 
 //highlight the clue

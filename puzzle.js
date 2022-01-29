@@ -706,7 +706,11 @@ function autoCheck(){
 				}
 				else{
 					var text = document.getElementById('completion-text');
-					text.style.left = "450px";
+					text.style.left = "-100px";
+					if(screen.width > 700){
+						text.style.left = "20%";
+					}
+					
 					breaker = true;
 				}
 
@@ -720,7 +724,11 @@ function autoCheck(){
 	var time = document.getElementById('stopwatch');
 	var text = document.getElementById('completion-text');
 	var timeText = time.innerHTML;
-	text.style.left = "450px";
+	text.style.left = "-100px";
+	if(screen.width > 700){	
+		text.style.left = "50%";
+	}
+
 	text.style.background = "#b3f1ff";
 	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
 	if(puzzleChecked == true){

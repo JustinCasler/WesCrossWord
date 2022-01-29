@@ -671,6 +671,23 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
+	check = true;
+	for(i = 0; i < puzzelArrayData.length; i++){
+		for(j = 0; j < puzzelArrayData.length; j++){
+			txtID = String('txt' + '_' + i + '_' + j);
+			if(puzzelArrayData[i][j] != 0){
+				console.log(document.getElementById(txtID).value)
+				if(document.getElementById(txtID).value == ""){
+					check = false;
+				
+				}
+			}
+		}
+	}
+
+	if(check == false){
+		return;
+	}
 	var breaker = false;
 	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {

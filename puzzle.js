@@ -732,6 +732,8 @@ function autoCheck(){
 		box.style.color = "#0066ff";
 		box.style.border = "1px solid #000000";
 	}
+	text.focus();
+
 }
 
 
@@ -897,5 +899,5 @@ function showMenu(){
            }
 function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
-    navLinks.style.right = "-200px";
+    navLinks.style.right = "-500px";
            }

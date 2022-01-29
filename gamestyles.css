@@ -156,7 +156,9 @@ nav{
 	left: 20%;
 	transform: translate(-50%,-50%);
 	text-align: center;
+	transition: all 1s ease-in-out;
   }
+
   
   .text-box h1{
 	font-size: 40px;
@@ -351,19 +353,29 @@ nav{
   }
 
   @media(max-width: 700px) {
-	.text-box h1{
+	body {
+		overflow-x: hidden; /* Hide scrollbars */
+	  }  
+
+
+	.text-box{
 		font-size: 30px;
+		position: absolute;
+		left: 50%;
 	}
+
+
 	.nav-links ul li{
 		display: block;
+		background: none;
 	}
 	.nav-links{
 		position: absolute;
-		background:#ff8686;
+		background:#FF5C5C;
 		height: 100vh;
 		width: 200px;
 		top: 0;
-		right: -200px;
+		right: -500px;
 		text-align: left;
 		z-index: 2;
 		transition: .5s;
@@ -394,29 +406,29 @@ nav{
 		border: none;
 	  }
 	  
-	  .solve-button{ 
+	.solve-button{ 
 		background : #F49F9F;
 		padding: 12px 13px;
 		border: none; 
 	  }
-	   .clue-button{
+	.clue-button{
 		background : #F49292;
 		padding: 12px 13px; 
 		border: none;
 	  }
 	  
-	  .clear-button{
+	.clear-button{
 		background : #FF5C5C;
 		padding: 12px 13px;
 		border: none;
 	  }
 	
-	 .pencil-button{
+	.pencil-button{
 		background : #EA8193;
 		padding: 12px 13px; 
 		border: none;
 	  }
-	  #hintsTable{
+	#hintsTable{
 		display:flex;
 		position: absolute;
 		left: 100px;

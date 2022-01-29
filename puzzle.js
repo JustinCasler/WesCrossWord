@@ -100,9 +100,6 @@ function initializeScreen(){
 			boxes[i].style.height = sizeCoefficient;
 		}
 	}
-	
-
-	
 	startTimer();
 	// addHint();
 	
@@ -684,7 +681,6 @@ function autoCheck(){
 			}
 		}
 	}
-
 	if(check == false){
 		return;
 	}
@@ -710,7 +706,6 @@ function autoCheck(){
 					if(screen.width > 700){
 						text.style.left = "20%";
 					}
-					
 					breaker = true;
 				}
 
@@ -728,7 +723,6 @@ function autoCheck(){
 	if(screen.width > 700){	
 		text.style.left = "50%";
 	}
-
 	text.style.background = "#b3f1ff";
 	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
 	if(puzzleChecked == true){
@@ -741,7 +735,6 @@ function autoCheck(){
 		box.style.border = "1px solid #000000";
 	}
 	text.focus();
-
 }
 
 
@@ -848,7 +841,7 @@ function solveClicked(){
 function startTimer() {
 	console.log("start");
 	startButton.style.right = "3000px";
-	stopButton.style.right = "15px";
+	stopButton.style.right = "10%";
   	if (stoptime == true) {
         stoptime = false;
         timerCycle();
@@ -859,7 +852,7 @@ function startTimer() {
 function stopTimer() {
 	console.log("stop");
 	stopButton.style.right = "3000px";
-	startButton.style.right = "15px";
+	startButton.style.right = "10%";
   	if (stoptime == false) {
     stoptime = true;
   	}

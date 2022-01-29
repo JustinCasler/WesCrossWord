@@ -121,6 +121,7 @@ nav{
 	padding: 8px 12px;
 	position: relative;
 	transition: all 0.3s ease-in-out;
+	background: black;
   }
   .nav-links ul li:hover{
 	background: #ff8686;
@@ -131,7 +132,7 @@ nav{
 	font-size: 13px;
 	font-family : linotype-didot, serif;
 	font-weight : bold;
-	color : #000000;
+	color : #ffffff;
   }
   
   .nav-links ul li::after{

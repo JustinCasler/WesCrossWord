@@ -508,7 +508,7 @@ function highlightSquares(rowcol, squareID){
 				if (selectedSquare.classList.contains('numberedBox')){
 					for(i = 0; i <= imageTextID.length; i++){
 						if(imageTextID[i] == txtID){
-							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.background = "#F4A2A2";
 							selectedSquare.style.backgroundImage = imageArray[i];
 							selectedSquare.style.zIndex = "5";
 							selectedSquare.style.position = "left";
@@ -518,7 +518,7 @@ function highlightSquares(rowcol, squareID){
 					}
 				}
 				else{
-					selectedSquare.style.background = "#b3f1ff";
+					selectedSquare.style.background = "#F4A2A2";
 				}
 				squaresSelected.push(txtID);
 			}
@@ -533,7 +533,7 @@ function highlightSquares(rowcol, squareID){
 				if (selectedSquare.classList.contains('numberedBox')){
 					for(i = 0; i <= imageTextID.length; i++){
 						if(imageTextID[i] == txtID){
-							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.background = "#F4A2A2";
 							selectedSquare.style.backgroundImage = imageArray[i];
 							selectedSquare.style.zIndex = "5";
 							selectedSquare.style.position = "left";
@@ -543,7 +543,7 @@ function highlightSquares(rowcol, squareID){
 					}
 				}
 				else{
-					selectedSquare.style.background = "#b3f1ff";
+					selectedSquare.style.background = "#F4A2A2";
 				}
 				squaresSelected.push(txtID);
 			}
@@ -671,15 +671,15 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
-	check = true;
+	var check = true;
 	for(i = 0; i < puzzelArrayData.length; i++){
 		for(j = 0; j < puzzelArrayData.length; j++){
 			txtID = String('txt' + '_' + i + '_' + j);
 			if(puzzelArrayData[i][j] != 0){
-				console.log(document.getElementById(txtID).value)
+				console.log(document.getElementById(txtID).value);
 				if(document.getElementById(txtID).value == ""){
 					check = false;
-				
+					break;
 				}
 			}
 		}

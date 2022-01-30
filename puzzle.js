@@ -704,7 +704,7 @@ function autoCheck(){
 					var text = document.getElementById('completion-text');
 					text.style.left = "-100px";
 					if(screen.width > 700){
-						text.style.left = "20%";
+						text.style.left = "50%";
 					}
 					breaker = true;
 				}

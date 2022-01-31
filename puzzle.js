@@ -65,14 +65,14 @@ function initializeScreen(){
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput;
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
-					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\'); mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID);
 					assignImage(txtID);
 				}
 				else{
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\'); keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 				}
@@ -190,10 +190,16 @@ function getColNext(i, j, availableSquares){
 	var row = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
 	return textID;
-
+}
+//backspace needs to work on
+function backspace(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID){
+	if(event.keyCode == 8){
+		console.log('Backspace');
+		moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
+	}
 }
 // setting up to call function based on key input
-function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID) {
+function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID){
 	if (event.keyCode >= 65 && event.keyCode <= 90){
     console.log("input was a-z");
 	moveCursor(fromTextBox, newRowBox, newColBox);
@@ -217,11 +223,6 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 			console.log("ArrowRight");
 			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
-		case "Backspace":
-			console.log('Backspace');
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
-			
-		break;
 		default:
 			console.log(event.key, event.keyCode);
 		return; 
@@ -232,15 +233,16 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 function moveCursor(fromTextBox, newRowBox, newColBox){
 	var length = fromTextBox.value.length;
 	var maxLength = fromTextBox.getAttribute("maxLength");
-	if(downOrAcross == false){
-		if (length == maxLength){
+	if(length == maxLength){
+		if (downOrAcross == false){
 			document.getElementById(newRowBox).focus();
 		}
-	}
-	else if(downOrAcross == true){
-		if (length == maxLength){
+		else if(downOrAcross == true){
 			document.getElementById(newColBox).focus();
 		}
+	}
+	else{
+		updateDownOrAcross()
 	}
 	updateDownOrAcross();
 	
@@ -418,11 +420,28 @@ binaryPuzzel = [
 	[0,0,0,0,0],
 	[0,0,0,0,0],
 ]
-function mappedInput(event){
-	if (event.keyCode >= 65 && event.keyCode <= 90){
-	rowI = currentTextInput[4];
-	colI = currentTextInput[6];
-	binaryPuzzel[rowI][colI] = 1;
+function mappedInput(event, nextRowBox, nextColBox){
+	if(binaryPuzzel[currentTextInput[4]][currentTextInput[6]] == 0){
+		if (event.keyCode >= 65 && event.keyCode <= 90){
+				console.log(binaryPuzzel)
+				rowI = currentTextInput[4];
+				colI = currentTextInput[6];
+				binaryPuzzel[rowI][colI] = 1;
+			}
+	}
+	else if (event.keyCode >= 65 && event.keyCode <= 90){
+		if(downOrAcross == false){
+			console.log(binaryPuzzel)
+			rowI = nextRowBox[4];
+			colI = nextRowBox[6];
+			binaryPuzzel[rowI][colI] = 1;
+		}
+		else if(downOrAcross == true){
+			console.log(binaryPuzzel)
+			rowI = nextColBox[4];
+			colI = nextColBox[6];
+			binaryPuzzel[rowI][colI] = 1;
+		}
 	}
 }
 
@@ -460,6 +479,15 @@ function clearAllClicked(){
 	currentTextInput = '';
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelTable.innerHTML = '';
+	counter = 0
+	imageTextID = []
+	binaryPuzzel = [
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+	]
     initializeScreen();
 }
 
@@ -571,7 +599,6 @@ function highlightSquares(rowcol, squareID){
 counter = 0
 function assignImage(squareID){
 	var imageCell = document.getElementById(squareID)
-	var imageUrl = "url(number1.png)"
 	imageCell.style.backgroundImage = imageArray[counter]
 	counter ++
 }

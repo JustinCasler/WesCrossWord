@@ -20,6 +20,7 @@
 	text-align: center;
 	outline: none;
 	background: none;
+	caret-color: transparent;
 }
 .numberedBox{
 	width: 60px;
@@ -32,6 +33,7 @@
 	position: left;
 	background-size:12px;
 	background-repeat: no-repeat;
+	caret-color: transparent
 	
 }
 

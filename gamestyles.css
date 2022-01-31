@@ -161,7 +161,6 @@ nav{
 	text-align: center;
 	transition: all 0.3s ease-in-out;
   }
-
   
   .text-box h1{
 	font-size: 40px;
@@ -172,18 +171,22 @@ nav{
   }
   
   .text-box ul{
+	
 	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: inline-block;
+	padding: 0;;
+	display: inline;
   }
   .text-box ul li{
+	display: inline-block;
 	font-size: 15px;
 	font-family: linotype-didot, serif;
 	text-align: center;
 	font-weight: 700;
 	font-style: normal;
 	color : #000000;
+  }
+  #date{
+	font-size: 14px;
   }
   
   
@@ -239,7 +242,7 @@ nav{
 	position: absolute;
 	top: 204px;
 	left: 10%;
-	margin-left: 100px;
+	margin-left: 204px;
 	text-decoration: none;
 	font-size: 15px;
 	font-family : Source Sans Pro;
@@ -383,7 +386,7 @@ nav{
 	.text-box{
 		font-size: 30px;
 		position: absolute;
-		left: 50%;
+		left: 250px;
 	}
 
 
@@ -411,6 +414,7 @@ nav{
 		cursor: pointer;
 		
 	}
+	
 	.nav-links ul{
 	   padding: 30px;
 	}
@@ -470,6 +474,12 @@ nav{
 		
 		
 	}
+	#timer-buttons{
+		position: absolute;
+		top: 202px;
+		left: 100px;
+		
+	}
 
 
 	#hintsTable td{
@@ -489,6 +499,14 @@ nav{
 		padding: 25px;
 		color : #000000;
 	}
+	#clue-box{
+		position: absolute;
+		top: 250px;
+		left: 100px;
+		text-align: center;
+		padding-left: 15px;
+		padding-right: 15px;
+	  }
 	
 
 

@@ -15,7 +15,8 @@
         <link rel="stylesheet" href="https://use.typekit.net/div0nxt.css">
     </head>
 
-    <body onload="initializeScreen()">
+    <body onload="initializeScreen(); setTime();">
+
         <section class="header">
             <nav>
                 <a href="StylePractice.html"><img src="WesleyanCrosswordLogo.png" ></a>
@@ -33,7 +34,8 @@
             <div class=text-box>
                 <h1>Monday Mini</h1>
                 <ul>
-                    <li>By Justin Hardison 1/26/2022</li>
+                    <li id="author">By Justin Hardison </li>
+                    <li id="date"></li>
                 </ul>
                 
             </div>
@@ -46,7 +48,7 @@
             <ul id="timer-buttons">
                <li><i id="play-button" class="fa fa-play" onclick="startTimer()"></i></li>
                <li><i id="stop-button" class="fa fa-pause" onclick="stopTimer()"></i></li>
-               <li><i id="reset-button" class="fa fa-repeat" onclick="resetTimer()"></i></li>
+               <!-- <li><i id="reset-button" class="fa fa-repeat" onclick="resetTimer()"></i></li> -->
             </ul>
         </div>
         <script src="puzzle.js"></script>

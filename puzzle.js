@@ -16,6 +16,22 @@ var sec = 0;
 var stoptime = true;
 var clueSelected = [];
 var puzzleChecked = false;
+var monthsMap = {
+	0 : "January",
+	1 : "February",
+	2 : "March",
+	3 : "April",
+	4 : "May",
+	5 : "June",
+	6 : "July",
+	7 : "August",
+	8 : "September",
+	9 : "October",
+	10 : "November",
+	11 : "December",
+}
+
+
 
 //Loads the Crossword
 function initializeScreen(){
@@ -902,3 +918,14 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-500px";
            }
+
+//set time
+function setTime(){
+	var today = new Date();
+	var dd = String(today.getDate());
+	var mm = String(today.getMonth()); //January is 0!
+	var month = monthsMap[mm]
+	var yyyy = today.getFullYear();
+	today = String(month + ' ' + dd + ', ' + yyyy);
+	document.getElementById("date").innerHTML = today;
+}

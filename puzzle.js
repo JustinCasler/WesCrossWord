@@ -233,17 +233,26 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 }
 //goes to the next square
 function moveCursor(fromTextBox, newRowBox, newColBox, keyletter){
+	rowBox = document.getElementById(newRowBox);
+	colBox = document.getElementById(newColBox);
+	colLetter = colBox.value;
+	rowLetter = rowBox.value; 
+	if (colBox.value == ''){
+		colLetter = ' ';
+	}
+	if(rowBox.value == ''){
+	rowLetter = ' ';
+	}
 	letter = String(keyletter).replace('Key', '');
 	console.log(letter);
 	fromTextBox.value = letter;
-
-	
 	if (downOrAcross == false){
-		document.getElementById(newRowBox).focus();
-
+		rowBox.focus();
+		rowBox.value = rowLetter;
 	}
 	else if(downOrAcross == true){
-		document.getElementById(newColBox).focus();
+		colBox.focus();
+		colBox.value = colLetter;
 	}
 	else{
 		updateDownOrAcross()

@@ -63,16 +63,16 @@ function initializeScreen(){
 				var newRowTxtID = getRowNext(i, j, availableSquares);
 				var pastRowTxtID = getPastRowTxt(i, j, availableSquares);
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
-				var currentTxtID = currentTextInput
+				var currentTxtID = currentTextInput;
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
-					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\'); mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
-					imageTextID.push(txtID)
-					assignImage(txtID)
+					imageTextID.push(txtID);
+					assignImage(txtID);
 				}
 				else{
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event)"; onkeyup="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\'); keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 				}
@@ -82,6 +82,23 @@ function initializeScreen(){
 			}	
 		}
 		
+	}
+	var sizeCoefficient = String(300/(puzzelArrayData.length)) + "px";
+	var squares = document.getElementsByClassName("numberedBox");
+	var boxes = document.getElementsByClassName("inputBox");
+	for(i in squares){
+		if(squares[i].id != undefined){
+			console.log(squares[i].id);
+			squares[i].style.width = sizeCoefficient;
+			squares[i].style.height = sizeCoefficient;
+		}
+		
+	}
+	for(i in boxes){
+		if(boxes[i].id != undefined){
+			boxes[i].style.width = sizeCoefficient;
+			boxes[i].style.height = sizeCoefficient;
+		}
 	}
 	startTimer();
 	// addHint();
@@ -173,15 +190,23 @@ function getColNext(i, j, availableSquares){
 	var row = number % puzzelArrayData.length;
 	var textID = String('txt' + '_' + row + '_' + col);
 	return textID;
-
+}
+//backspace needs to work on
+function backspace(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID){
+	if(event.keyCode == 8){
+		console.log('Backspace');
+		moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
+	}
 }
 // setting up to call function based on key input
-function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID) {
+function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastColBox, currentTxtID){
+	
 	if (event.keyCode >= 65 && event.keyCode <= 90){
-    console.log("input was a-z");
-	moveCursor(fromTextBox, newRowBox, newColBox);
-	numberOfLetters ++;
-	trackLetter();
+		letter = event.code
+    	console.log("input was a-z");
+		moveCursor(fromTextBox, newRowBox, newColBox, letter);
+		numberOfLetters ++;
+		trackLetter();
 	}
 	switch (event.key) {
 		case "ArrowDown":
@@ -200,11 +225,6 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 			console.log("ArrowRight");
 			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
 		break;
-		case "Backspace":
-			console.log('Backspace');
-			moveCursorIfBlank(event, this, newRowBox ,  newColBox, lastRowBox, lastColBox);
-			
-		break;
 		default:
 			console.log(event.key, event.keyCode);
 		return; 
@@ -212,18 +232,21 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
 	event.preventDefault();
 }
 //goes to the next square
-function moveCursor(fromTextBox, newRowBox, newColBox){
-	var length = fromTextBox.value.length;
-	var maxLength = fromTextBox.getAttribute("maxLength");
-	if(downOrAcross == false){
-		if (length == maxLength){
-			document.getElementById(newRowBox).focus();
-		}
+function moveCursor(fromTextBox, newRowBox, newColBox, keyletter){
+	letter = String(keyletter).replace('Key', '');
+	console.log(letter);
+	fromTextBox.value = letter;
+
+	
+	if (downOrAcross == false){
+		document.getElementById(newRowBox).focus();
+
 	}
 	else if(downOrAcross == true){
-		if (length == maxLength){
-			document.getElementById(newColBox).focus();
-		}
+		document.getElementById(newColBox).focus();
+	}
+	else{
+		updateDownOrAcross()
 	}
 	updateDownOrAcross();
 	
@@ -401,11 +424,28 @@ binaryPuzzel = [
 	[0,0,0,0,0],
 	[0,0,0,0,0],
 ]
-function mappedInput(event){
-	if (event.keyCode >= 65 && event.keyCode <= 90){
-	rowI = currentTextInput[4];
-	colI = currentTextInput[6];
-	binaryPuzzel[rowI][colI] = 1;
+function mappedInput(event, nextRowBox, nextColBox){
+	if(binaryPuzzel[currentTextInput[4]][currentTextInput[6]] == 0){
+		if (event.keyCode >= 65 && event.keyCode <= 90){
+				console.log(binaryPuzzel)
+				rowI = currentTextInput[4];
+				colI = currentTextInput[6];
+				binaryPuzzel[rowI][colI] = 1;
+			}
+	}
+	else if (event.keyCode >= 65 && event.keyCode <= 90){
+		if(downOrAcross == false){
+			console.log(binaryPuzzel)
+			rowI = nextRowBox[4];
+			colI = nextRowBox[6];
+			binaryPuzzel[rowI][colI] = 1;
+		}
+		else if(downOrAcross == true){
+			console.log(binaryPuzzel)
+			rowI = nextColBox[4];
+			colI = nextColBox[6];
+			binaryPuzzel[rowI][colI] = 1;
+		}
 	}
 }
 
@@ -443,6 +483,15 @@ function clearAllClicked(){
 	currentTextInput = '';
 	var puzzelTable = document.getElementById("puzzel");
 	puzzelTable.innerHTML = '';
+	counter = 0
+	imageTextID = []
+	binaryPuzzel = [
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+		[0,0,0,0,0],
+	]
     initializeScreen();
 }
 
@@ -488,7 +537,7 @@ function highlightSquares(rowcol, squareID){
 				if (selectedSquare.classList.contains('numberedBox')){
 					for(i = 0; i <= imageTextID.length; i++){
 						if(imageTextID[i] == txtID){
-							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.background = "#F4A2A2";
 							selectedSquare.style.backgroundImage = imageArray[i];
 							selectedSquare.style.zIndex = "5";
 							selectedSquare.style.position = "left";
@@ -498,7 +547,7 @@ function highlightSquares(rowcol, squareID){
 					}
 				}
 				else{
-					selectedSquare.style.background = "#b3f1ff";
+					selectedSquare.style.background = "#F4A2A2";
 				}
 				squaresSelected.push(txtID);
 			}
@@ -513,7 +562,7 @@ function highlightSquares(rowcol, squareID){
 				if (selectedSquare.classList.contains('numberedBox')){
 					for(i = 0; i <= imageTextID.length; i++){
 						if(imageTextID[i] == txtID){
-							selectedSquare.style.background = "#b3f1ff";
+							selectedSquare.style.background = "#F4A2A2";
 							selectedSquare.style.backgroundImage = imageArray[i];
 							selectedSquare.style.zIndex = "5";
 							selectedSquare.style.position = "left";
@@ -523,7 +572,7 @@ function highlightSquares(rowcol, squareID){
 					}
 				}
 				else{
-					selectedSquare.style.background = "#b3f1ff";
+					selectedSquare.style.background = "#F4A2A2";
 				}
 				squaresSelected.push(txtID);
 			}
@@ -554,7 +603,6 @@ function highlightSquares(rowcol, squareID){
 counter = 0
 function assignImage(squareID){
 	var imageCell = document.getElementById(squareID)
-	var imageUrl = "url(number1.png)"
 	imageCell.style.backgroundImage = imageArray[counter]
 	counter ++
 }
@@ -651,6 +699,22 @@ function trackLetter(){
 
 //checkpuzzle if the puzzle is completed
 function autoCheck(){
+	var check = true;
+	for(i = 0; i < puzzelArrayData.length; i++){
+		for(j = 0; j < puzzelArrayData.length; j++){
+			txtID = String('txt' + '_' + i + '_' + j);
+			if(puzzelArrayData[i][j] != 0){
+				console.log(document.getElementById(txtID).value);
+				if(document.getElementById(txtID).value == ""){
+					check = false;
+					break;
+				}
+			}
+		}
+	}
+	if(check == false){
+		return;
+	}
 	var breaker = false;
 	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
@@ -669,7 +733,10 @@ function autoCheck(){
 				}
 				else{
 					var text = document.getElementById('completion-text');
-					text.style.left = "450px";
+					text.style.left = "-100px";
+					if(screen.width > 700){
+						text.style.left = "50%";
+					}
 					breaker = true;
 				}
 
@@ -683,7 +750,10 @@ function autoCheck(){
 	var time = document.getElementById('stopwatch');
 	var text = document.getElementById('completion-text');
 	var timeText = time.innerHTML;
-	text.style.left = "450px";
+	text.style.left = "-100px";
+	if(screen.width > 700){	
+		text.style.left = "50%";
+	}
 	text.style.background = "#b3f1ff";
 	text.innerHTML = "Puzzle Completed!" + "Time: " + timeText;
 	if(puzzleChecked == true){
@@ -695,6 +765,7 @@ function autoCheck(){
 		box.style.color = "#0066ff";
 		box.style.border = "1px solid #000000";
 	}
+	text.focus();
 }
 
 
@@ -801,7 +872,7 @@ function solveClicked(){
 function startTimer() {
 	console.log("start");
 	startButton.style.right = "3000px";
-	stopButton.style.right = "15px";
+	stopButton.style.right = "10%";
   	if (stoptime == true) {
         stoptime = false;
         timerCycle();
@@ -812,7 +883,7 @@ function startTimer() {
 function stopTimer() {
 	console.log("stop");
 	stopButton.style.right = "3000px";
-	startButton.style.right = "15px";
+	startButton.style.right = "10%";
   	if (stoptime == false) {
     stoptime = true;
   	}
@@ -860,5 +931,5 @@ function showMenu(){
            }
 function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
-    navLinks.style.right = "-200px";
+    navLinks.style.right = "-500px";
            }

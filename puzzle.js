@@ -81,14 +81,14 @@ function initializeScreen(){
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput;
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
-					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\'); mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\'); mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID);
 					assignImage(txtID);
 				}
 				else{
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\'); keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\'); keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 				}
@@ -119,6 +119,25 @@ function initializeScreen(){
 	startTimer();
 	// addHint();
 	
+}
+
+
+
+function checkSpaces(){
+	var puzzelArray = preparePuzzelArray();
+	for(i = 0; i < puzzelArray.length; i++){
+		for(j = 0; j < puzzelArrayData.length; j++){
+			txtID = String('txt' + '_' + i + '_' + j);
+			if(puzzelArrayData[i][j] != 0){
+				if(document.getElementById(txtID).value == ' '){
+					console.log("YOOOO", "'" + document.getElementById(txtID).value + "'");
+					document.getElementById(txtID).value = '';
+					console.log("this", "'" + document.getElementById(txtID).value + "'");
+				}
+
+			}
+		}
+	}
 }
 
 //get the last row
@@ -222,6 +241,7 @@ function keyEvents(event, fromTextBox, newRowBox, newColBox , lastRowBox, lastCo
     	console.log("input was a-z");
 		moveCursor(fromTextBox, newRowBox, newColBox, letter);
 		numberOfLetters ++;
+
 		trackLetter();
 	}
 	switch (event.key) {
@@ -643,7 +663,7 @@ function highlightClue(downAcross){
 		for (var i = 0; i < clueSelected.length; i++){
 			var box = document.getElementById(clueSelected[i]);
 			box.style.background = "none";
-			box.style.border = "none";
+			box.style.border = "1px solid white";
 		}
 	}
 	if (downOrAcross != true){

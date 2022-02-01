@@ -81,14 +81,14 @@ function initializeScreen(){
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput;
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
-					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\'); mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\');"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID);
 					assignImage(txtID);
 				}
 				else{
-				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="mappedInput(event,  \'' + newRowTxtID + '\', \'' + newColTxtID + '\'); keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
+				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 				rowcol + '\' , \'' + txtID + '\');">';
 				}
@@ -282,6 +282,8 @@ function moveCursor(fromTextBox, newRowBox, newColBox, keyletter){
 	letter = String(keyletter).replace('Key', '');
 	console.log(letter);
 	fromTextBox.value = letter;
+	binaryPuzzel[currentTextInput[4]][currentTextInput[6]] = 1
+	console.log(binaryPuzzel)
 	if (downOrAcross == false){
 		rowBox.focus();
 		rowBox.value = rowLetter;
@@ -469,30 +471,6 @@ binaryPuzzel = [
 	[0,0,0,0,0],
 	[0,0,0,0,0],
 ]
-function mappedInput(event, nextRowBox, nextColBox){
-	if(binaryPuzzel[currentTextInput[4]][currentTextInput[6]] == 0){
-		if (event.keyCode >= 65 && event.keyCode <= 90){
-				console.log(binaryPuzzel)
-				rowI = currentTextInput[4];
-				colI = currentTextInput[6];
-				binaryPuzzel[rowI][colI] = 1;
-			}
-	}
-	else if (event.keyCode >= 65 && event.keyCode <= 90){
-		if(downOrAcross == false){
-			console.log(binaryPuzzel)
-			rowI = nextRowBox[4];
-			colI = nextRowBox[6];
-			binaryPuzzel[rowI][colI] = 1;
-		}
-		else if(downOrAcross == true){
-			console.log(binaryPuzzel)
-			rowI = nextColBox[4];
-			colI = nextColBox[6];
-			binaryPuzzel[rowI][colI] = 1;
-		}
-	}
-}
 
 //Returns Array
 function preparePuzzelArray(){

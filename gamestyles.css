@@ -6,24 +6,25 @@
 #puzzel{
 	text-align: center;
 	position: absolute;
-	top: 290px;
-	left: 100px;
+	top: 40%;
+	left: 10%;
 	border-collapse: collapse;
-	border: 1px solid black;
+	border: 0.5px solid black;
+	transition: all 0.5s ease;
 	
 }
 .inputBox{
 	width: 60px;
 	height: 60px;
-	border: 1px solid ;
+	border: 0.5px solid ;
 	text-align: center;
 	outline: none;
 	background: none;
 }
 .numberedBox{
 	width: 60px;
-	height:60px;
-	border: 1px solid ;
+	height: 60px;
+	border: 0.5px solid black;
 	text-align: center;
 	outline: none;
 	background: none;
@@ -56,12 +57,14 @@ input[type="text"]
 #hintsTable{
 	width: 480px;
 	position: absolute;
-	left: 440px;
-	top: 250px;
+	margin-left: 350px;
+	left: 10%;
+	top: 40%;
 	font-size: 13px;
 	font-family : Source Sans Pro;
 	font-weight : bold;
 	color : #000000;
+	transition: all 0.5s ease;
 	
 }
 #hintsTable td{
@@ -82,7 +85,7 @@ strong{
 #completion-text{
 	
 	position: absolute;
-	top: 450px;
+	top: 550px;
 	left: -450px;
 	font-size: 20px;
 	font-family : Source Sans Pro;
@@ -121,6 +124,7 @@ nav{
 	padding: 8px 12px;
 	position: relative;
 	transition: all 0.3s ease-in-out;
+	background: black;
   }
   .nav-links ul li:hover{
 	background: #ff8686;
@@ -131,7 +135,7 @@ nav{
 	font-size: 13px;
 	font-family : linotype-didot, serif;
 	font-weight : bold;
-	color : #000000;
+	color : #ffffff;
   }
   
   .nav-links ul li::after{
@@ -155,6 +159,7 @@ nav{
 	left: 20%;
 	transform: translate(-50%,-50%);
 	text-align: center;
+	transition: all 0.3s ease-in-out;
   }
   
   .text-box h1{
@@ -166,18 +171,22 @@ nav{
   }
   
   .text-box ul{
+	
 	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: inline-block;
+	padding: 0;;
+	display: inline;
   }
   .text-box ul li{
+	display: inline-block;
 	font-size: 15px;
 	font-family: linotype-didot, serif;
 	text-align: center;
 	font-weight: 700;
 	font-style: normal;
 	color : #000000;
+  }
+  #date{
+	font-size: 14px;
   }
   
   
@@ -216,7 +225,7 @@ nav{
   #stopwatch{
 	position: absolute;
 	top: 191px;
-	left: 100px;
+	left: 10%;
 	margin-top: 1px;
 	text-decoration: none;
 	font-size: 15px;
@@ -232,7 +241,8 @@ nav{
 	list-style-type: none;
 	position: absolute;
 	top: 204px;
-	left: 300px;
+	left: 10%;
+	margin-left: 204px;
 	text-decoration: none;
 	font-size: 15px;
 	font-family : Source Sans Pro;
@@ -258,7 +268,8 @@ nav{
 	flex: 1;
 	text-align: center;
 	top: 190px;
-	left: 410px;
+	left: 10%;
+	margin-left: 310px;
   
   }
   .toolbar table tr{
@@ -286,35 +297,43 @@ nav{
 	background : #FFB3B3;
 	padding: 12px 30px;
 	border: none;
+	transition: all 0.5s ease-in-out;
   }
+
   
   .solve-button{ 
 	background : #F49F9F;
 	padding: 12px 30px;
-	border: none; 
+	border: none;
+	transition: all 0.5s ease-in-out; 
+
+
   }
    .clue-button{
 	background : #F49292;
 	padding: 12px 30px; 
 	border: none;
+	transition: all 0.5s ease-in-out;
   }
   
   .clear-button{
 	background : #FF5C5C;
 	padding: 12px 30px;
 	border: none;
+	transition: all 0.5s ease-in-out;
   }
 
  .pencil-button{
 	background : #EA8193;
 	padding: 12px 30px; 
 	border: none;
+	transition: all 0.5s ease-in-out;
   }
 
   #clue-box{
 	position: absolute;
 	top: 250px;
-	left: 90px;
+	left: 10%;
 	text-align: center;
 	padding-left: 15px;
 	padding-right: 15px;
@@ -331,38 +350,57 @@ nav{
 	  position: absolute;
 	  padding: 2px;
 	  display: inline;
-	  right: 300px;
+	  right: 20%;
   }
 
   #stop-button{
 	  position: absolute;
 	  padding: 2px;
 	  display: inline;
-	  right: 0px;
+	  margin-left: 100px;
 	  
 	  
   }
 
   #reset-button{
 
-	  padding-left: 5px;
+	  padding-left: 100px;
 	  
   }
 
   @media(max-width: 700px) {
-	.text-box h1{
-		font-size: 30px;
+	body {
+		overflow-x: hidden; /* Hide scrollbars */
+	  }  
+	#puzzel{
+		text-align: center;
+		position: absolute;
+		top: 290px;
+		left: 100px;
+		border-collapse: collapse;
+		border: 1px solid black;
+		
 	}
+
+
+	.text-box{
+		font-size: 30px;
+		position: absolute;
+		left: 250px;
+	}
+
+
 	.nav-links ul li{
 		display: block;
+		background: none;
 	}
 	.nav-links{
 		position: absolute;
-		background:#ff8686;
+		background:#FF5C5C;
 		height: 100vh;
 		width: 200px;
 		top: 0;
-		right: -200px;
+		right: -500px;
 		text-align: left;
 		z-index: 2;
 		transition: .5s;
@@ -376,8 +414,14 @@ nav{
 		cursor: pointer;
 		
 	}
+	
 	.nav-links ul{
 	   padding: 30px;
+	}
+	#stopwatch{
+		position: absolute;
+		top: 190px;
+		left: 100px;
 	}
 
 	.toolbar{
@@ -385,7 +429,8 @@ nav{
 		flex: 1;
 		text-align: center;
 		top: 620px;
-		left: 100px;
+		left: 102px;
+		margin-left: 0px;
 	}
 	.check-button{
 		background : #FFB3B3;
@@ -393,34 +438,35 @@ nav{
 		border: none;
 	  }
 	  
-	  .solve-button{ 
+	.solve-button{ 
 		background : #F49F9F;
 		padding: 12px 13px;
 		border: none; 
 	  }
-	   .clue-button{
+	.clue-button{
 		background : #F49292;
 		padding: 12px 13px; 
 		border: none;
 	  }
 	  
-	  .clear-button{
+	.clear-button{
 		background : #FF5C5C;
 		padding: 12px 13px;
 		border: none;
 	  }
 	
-	 .pencil-button{
+	.pencil-button{
 		background : #EA8193;
 		padding: 12px 13px; 
 		border: none;
 	  }
-	  #hintsTable{
-		display:flex;
+	#hintsTable{
+		display: flex;
 		position: absolute;
-		left: 100px;
+		left: -250px;
 		top: 670px;
 		font-size: 13px;
+		width: 350px;
 		font-family : Source Sans Pro;
 		font-weight : bold;
 		color : #000000;
@@ -428,13 +474,39 @@ nav{
 		
 		
 	}
+	#timer-buttons{
+		position: absolute;
+		top: 202px;
+		left: 100px;
+		
+	}
 
 
 	#hintsTable td{
 		flex-basis: 33.33%;
-		border: 2px solid white;
+		border: none;
 		/* transition: all .3s ease-in-out; */
 	}
+	#completion-text{
+	
+		position: absolute;
+		top: 550px;
+		left: -450px;
+		font-size: 20px;
+		font-family : Source Sans Pro;
+		font-weight : bold;
+		background: #ffa7a7;
+		padding: 25px;
+		color : #000000;
+	}
+	#clue-box{
+		position: absolute;
+		top: 250px;
+		left: 100px;
+		text-align: center;
+		padding-left: 15px;
+		padding-right: 15px;
+	  }
 	
 
 

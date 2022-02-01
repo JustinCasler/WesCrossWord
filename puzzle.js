@@ -760,6 +760,7 @@ function autoCheck(){
 	if(check == false){
 		return;
 	}
+	
 	var breaker = false;
 	var squaresList = [];
 	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
@@ -769,12 +770,12 @@ function autoCheck(){
 		var rowData = puzzelArrayData[i];
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
-				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-				
-				if(selectedInputTextElement.value == puzzelArrayData[i][j]){
-					id = ('txt' + '_' + i + '_' + j)
+				id = ('txt' + '_' + i + '_' + j)
+				var selectedInputTextElement = document.getElementById(id);
+				var text = selectedInputTextElement.value;
+				var lowertext = text.toLowerCase();
+				if(lowertext == puzzelArrayData[i][j]){
 					squaresList.push(id);
-					
 				}
 				else{
 					var text = document.getElementById('completion-text');
@@ -788,9 +789,11 @@ function autoCheck(){
 			}
 		}
 	}
+	console.log("poop");
 	if(breaker == true){
 		return;
 	}
+	
 	stopTimer();
 	var time = document.getElementById('stopwatch');
 	var text = document.getElementById('completion-text');
@@ -829,7 +832,9 @@ function checkClicked(){
 		for(var j = 0 ; j < rowData.length ; j++){
 			if(rowData[j] != 0){
 				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
-				if(selectedInputTextElement.value != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
+				var text = selectedInputTextElement.value;
+				var lowertext = text.toLowerCase();
+				if(lowertext != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
 					selectedInputTextElement.style.backgroundColor = "#ff8686";
 				}
 				else if(selectedInputTextElement.value != ''){

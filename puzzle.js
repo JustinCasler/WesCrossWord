@@ -599,10 +599,7 @@ function highlightSquares(rowcol, squareID){
 				}
 				squaresSelected.push(txtID);
 			}
-
 		}
-
-
 	}
 	var selectedSquare = document.getElementById(squareID);
 	if (selectedSquare.classList.contains('numberedBox')){
@@ -961,6 +958,19 @@ function hideMenu(){
 	var navLinks = document.getElementById("navLinks");
     navLinks.style.right = "-500px";
            }
+
+
+weekDict = {
+	6 : "Sunday",
+	0 : "Monday",
+	1 : "Tuesday",
+	2 : "Wednesday",
+	3 : "Thursday",
+	4 : "Friday",
+	5 : "Saturday"
+}
+
+
 //set time
 function setTime(){
 	var today = new Date();
@@ -968,6 +978,10 @@ function setTime(){
 	var mm = String(today.getMonth()); //January is 0!
 	var month = monthsMap[mm]
 	var yyyy = today.getFullYear();
+	var weekDay = today.getDate();
+
+	var todaysMini = weekDict[weekDay] + " Mini";
 	today = String(month + ' ' + dd + ', ' + yyyy);
+	document.getElementById("weekday").innerHTML = todaysMini;
 	document.getElementById("date").innerHTML = today;
 }

@@ -474,6 +474,13 @@ binaryPuzzel = [
 
 //Returns Array
 function preparePuzzelArray(){
+	var example = [
+		['a', 'd', 'd', 's', '0'],
+		['n', 'e', 'o', 'n', '0'],
+		['a', 'l', 'v', 'i', 'n'],
+		['s', 'i', 'e', 'v', 'e'],
+		['0', '0', 's', 'y', 'd'],
+	];
 	var items2 = [
 				['f', 'o', 's', 's', '0'],
 				['u', 'n', 'i', 't', '0'],
@@ -499,7 +506,7 @@ function preparePuzzelArray(){
 		['e', 'r', 'o', 's', '0', '0', '0'],
 	];
 
-return items2;
+return example;
 }
 //Clear All Button
 function clearAllClicked(){
@@ -772,6 +779,7 @@ function autoCheck(){
 	stopTimer();
 	var time = document.getElementById('stopwatch');
 	var text = document.getElementById('completion-text');
+	document.getElementById('play-button').style.left = "-4000px";
 	var timeText = time.innerHTML;
 	text.style.left = "-100px";
 	if(screen.width > 700){	

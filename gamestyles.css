@@ -285,6 +285,8 @@ nav{
 	display: flex;
 	align-items: center;
 	padding: 0px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 	
 	
   }
@@ -296,6 +298,7 @@ nav{
 	color : #000000;
 	transition: all 0.3s ease-in-out;
 	border-radius: 0;
+	-webkit-appearance: none;
 
   }
   .toolbar table tr td input:hover{
@@ -309,6 +312,8 @@ nav{
 	border: none;
 	transition: all 0.5s ease-in-out;
 	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
   }
 
   
@@ -318,6 +323,8 @@ nav{
 	border: none;
 	transition: all 0.5s ease-in-out; 
 	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 
 
   }
@@ -327,6 +334,8 @@ nav{
 	border: none;
 	transition: all 0.5s ease-in-out;
 	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
   }
   
   .clear-button{
@@ -335,6 +344,8 @@ nav{
 	border: none;
 	transition: all 0.5s ease-in-out;
 	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
   }
 
  .pencil-button{
@@ -343,7 +354,10 @@ nav{
 	border: none;
 	transition: all 0.5s ease-in-out;
 	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
   }
+  
 
   #clue-box{
 	position: absolute;

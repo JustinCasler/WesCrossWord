@@ -821,13 +821,12 @@ function checkClicked(){
 				var text = selectedInputTextElement.value;
 				var lowertext = text.toLowerCase();
 				if(lowertext != puzzelArrayData[i][j] && selectedInputTextElement.value != ''){
-					selectedInputTextElement.style.color = "#ff8686";
+					selectedInputTextElement.style.color = "#FF5C5C";
 					selectedInputTextElement.style.border = "0.5px solid black";
 				}
 				else if(selectedInputTextElement.value != ''){
 					selectedInputTextElement.style.color = "#0066ff";
 					selectedInputTextElement.style.border = "0.5px solid #000000";
-					selectedInputTextElement.style.pointerEvents = "none";
 				}
 
 				else{
@@ -852,7 +851,6 @@ function clueClicked(){
 		box.value = puzzelArrayData[row][column];
 		box.style.color = "#0066ff";
 		box.style.border = "0.5px solid #000000";
-		box.style.pointerEvents = "none";
 
 	}
 }
@@ -877,7 +875,6 @@ function solveClicked(){
 					box.value = puzzelArrayData[i][column];
 					box.style.color = "#0066ff";
 					box.style.border = "0.5px solid #000000";
-					box.style.pointerEvents = "none";
 					
 				}
 			}
@@ -893,7 +890,6 @@ function solveClicked(){
 					box.value = puzzelArrayData[row][j];
 					box.style.color = "#0066ff";
 					box.style.border = "0.5px solid #000000";
-					box.style.pointerEvents = "none";
 				}
 			}
 			

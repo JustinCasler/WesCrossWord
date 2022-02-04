@@ -21,6 +21,7 @@
 	outline: none;
 	background: none;
 	caret-color: transparent;
+	border-radius: 0;
 }
 .numberedBox{
 	width: 60px;
@@ -34,6 +35,7 @@
 	background-size:12px;
 	background-repeat: no-repeat;
 	caret-color: transparent;
+	border-radius: 0;
 	
 }
 
@@ -289,6 +291,7 @@ nav{
 	font-weight : bold;
 	color : #000000;
 	transition: all 0.3s ease-in-out;
+	border-radius: 0;
 
   }
   .toolbar table tr td input:hover{

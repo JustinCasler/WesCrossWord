@@ -666,6 +666,7 @@ function highlightNumBox(downAcross){
 					for(a = 1; a <= 5; a++){
 						if (rIndex == a){
 							document.getElementById(downImageID[a-1]).focus()
+							updateDownOrAcross()
 						}
 					}
 				}
@@ -674,6 +675,7 @@ function highlightNumBox(downAcross){
 					for(a = 1; a <= 5; a++){
 						if (rIndex == a){
 							document.getElementById(acrossImageID[a-1]).focus()
+							updateDownOrAcross()
 						}
 					}
 				}

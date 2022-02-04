@@ -6,7 +6,7 @@
 #puzzel{
 	text-align: center;
 	position: absolute;
-	top: 40%;
+	top: 280px;
 	left: 10%;
 	border-collapse: collapse;
 	border: 0.5px solid black;
@@ -61,7 +61,7 @@ input[type="text"]
 	position: absolute;
 	margin-left: 350px;
 	left: 10%;
-	top: 40%;
+	top: 260px;
 	font-size: 13px;
 	font-family : Source Sans Pro;
 	font-weight : bold;
@@ -334,8 +334,9 @@ nav{
 
   #clue-box{
 	position: absolute;
-	top: 250px;
+	top: 245px;
 	left: 10%;
+	margin-left: -10px;
 	text-align: center;
 	padding-left: 15px;
 	padding-right: 15px;

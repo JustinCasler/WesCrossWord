@@ -26,6 +26,7 @@ html, body {
 	background: none;
 	caret-color: transparent;
 	border-radius: 0;
+	cursor: default;
 }
 .numberedBox{
 	width: 60px;
@@ -40,6 +41,7 @@ html, body {
 	background-repeat: no-repeat;
 	caret-color: transparent;
 	border-radius: 0;
+	cursor: default;
 	
 }
 
@@ -78,6 +80,7 @@ input[type="text"]
 #hintsTable td{
 	border: 2px solid white;
 	padding: 5px;
+	cursor: pointer;
 	/* transition: all .3s ease-in-out; */
 }
 #hintsTable td:hover{
@@ -289,6 +292,7 @@ nav{
 	-moz-appearance: none;
 	
 	
+	
   }
   .toolbar table tr td input{
 	text-decoration: none;
@@ -299,6 +303,7 @@ nav{
 	transition: all 0.3s ease-in-out;
 	border-radius: 0;
 	-webkit-appearance: none;
+	cursor: pointer;
 
   }
   .toolbar table tr td input:hover{
@@ -374,6 +379,7 @@ nav{
 	font-family : Source Sans Pro;
 	font-weight : bold;
 	color : #000000;
+	
   }
   
   #play-button{
@@ -533,6 +539,7 @@ nav{
 		padding-bottom: 50px;
 		
 		
+		
 	}
 	#timer-buttons{
 		position: absolute;
@@ -545,6 +552,7 @@ nav{
 	#hintsTable td{
 		flex-basis: 33.33%;
 		border: none;
+		
 		/* transition: all .3s ease-in-out; */
 	}
 	#completion-text{

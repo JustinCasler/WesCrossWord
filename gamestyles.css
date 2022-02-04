@@ -429,6 +429,7 @@ nav{
 
   @media(max-width: 700px) {
 	body {
+		-webkit-appearance: none;
 		overflow-x: hidden; /* Hide scrollbars */
 	  }  
 	#puzzel{

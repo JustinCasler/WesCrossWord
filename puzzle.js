@@ -5,6 +5,8 @@ var squaresSelected = [];
 var imageArray = ["url(number1.png)", "url(number2.png)", "url(number3.png)", "url(number4.png)", "url(number5.png)",
 	"url(number6.png)", "url(number7.png)", "url(number8.png)", "url(number9.png)"]
 var imageTextID = []
+var downImageID = []
+var acrossImageID = []
 // true = down, false = across
 var downOrAcross = false;
 const timer = document.getElementById('stopwatch');
@@ -80,12 +82,20 @@ function initializeScreen(){
 				var pastRowTxtID = getPastRowTxt(i, j, availableSquares);
 				var pastColTxtID = getPastColTxt(i, j, availableSquares);
 				var currentTxtID = currentTextInput;
+				highlightNumBox(downAcross)
 				if(i == 0 || j == 0 || pastColTxtID[6] != txtID[6] || pastRowTxtID[4] != txtID[4]){
 					cell.innerHTML = '<input type="text" class="numberedBox"  MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\');"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\'); highlightClue(\'' + downAcross + '\'); updateDownOrAcross(); "style="text-transform: uppercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ');  updateDownOrAcross(); highlightClue(\'' + downAcross + '\'); highlightSquares(\''+
 					rowcol + '\' , \'' + txtID + '\');">';
 					imageTextID.push(txtID);
 					assignImage(txtID);
+					// need to fix so doesnt specify (0,0), this is temporary, if (0,0) null wont work. Add past col and row for first boxs
+						if(i == 0 && j == 0 || pastColTxtID[6] != txtID[6]){
+							downImageID.push(txtID)
+						}
+						if (i == 0 && j == 0 || pastRowTxtID[4] != txtID[4]){
+							acrossImageID.push(txtID)
+						}
 				}
 				else{
 				cell.innerHTML = '<input type="text" class="inputBox" MaxLength="1" onkeydown="keyEvents(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; onkeyup = "checkSpaces(); backspace(event, this, \'' + newRowTxtID + '\', \'' + newColTxtID + '\', \'' + pastRowTxtID+'\', \'' + pastColTxtID+'\', \'' + currentTxtID+'\')"; textInputID() onclick="highlightSquares(\''+
@@ -118,7 +128,8 @@ function initializeScreen(){
 	}
 	startTimer();
 	// addHint();
-	
+	console.log(downImageID)
+	console.log(acrossImageID)
 }
 
 
@@ -637,6 +648,40 @@ function assignImage(squareID){
 	counter ++
 }
 
+//makes the clue table clickable and focus on corresponding inputbox
+function highlightNumBox(downAcross){
+	var clue = downAcross.split(' ');
+	var table = document.getElementById("hintsTable"),rIndex,cIndex
+	for(i = 0; i < table.rows.length; i++){
+		console.log('I: ', i)
+		for(j = 0; j < table.rows[i].cells.length; j++){
+			console.log('J: ', j)
+			table.rows[i].cells[j].onclick = function(){
+				rIndex = this.parentElement.rowIndex
+				cIndex = this.cellIndex
+				downClue = parseInt(clue[0]) - 1
+				acrossClue = parseInt(clue[1]) - 1
+				if(cIndex == 1){
+				 	downOrAcross = true
+					for(a = 1; a <= 5; a++){
+						if (rIndex == a){
+							document.getElementById(downImageID[a-1]).focus()
+						}
+					}
+				}
+				else if(cIndex == 0){
+					downOrAcross = false
+					for(a = 1; a <= 5; a++){
+						if (rIndex == a){
+							document.getElementById(acrossImageID[a-1]).focus()
+						}
+					}
+				}
+				
+			}
+		}
+	}
+}
 //highlight the clue
 function highlightClue(downAcross){
 	var clues = downAcross.split(' ');

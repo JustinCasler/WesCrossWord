@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://use.typekit.net/div0nxt.css">
     </head>
 
-    <body onload="initializeScreen(); setTime();">
+    <body onload="initializeScreen(); setTime(); updateHints()">
 
         <section class="header">
             <nav>
@@ -24,7 +24,7 @@
                     <i class="fa fa-times" onclick="hideMenu()" ></i>
                     <ul>
                         <li> <a href=""">Home</a> </li>
-                        <li> <a href="">Archive</a> </li>
+                        <li> <a onclick="loadArchive()">Archive</a> </li>
                         <li> <a href="">User</a> </li>
                         <li> <a href="">Login</a> </li>
                     </ul>
@@ -72,19 +72,22 @@
                 <td><strong>ACROSS</strong></td><td><strong>DOWN</strong></td>
             </tr>
             <tr>
-                <td id="acrossClue1">1   Process of getting the sum</td><td id="downClue1">1  de Armas, Ortiz, for example</td>
+                <td id="acrossClues1">1   Process of getting the sum</td><td id="downClues1">1  de Armas, Ortiz, for example</td>
             </tr>
             <tr>
-                <td id="acrossClue5">5  Sandwich shop across from Freeman (with 2 down)</td><td id="downClue2">2  See 5 Across</td>
+                <td id="acrossClues2">5  Sandwich shop across from Freeman (with 2 down)</td><td id="downClues2">2  See 5 Across</td>
             </tr>
             <tr>
-                <td id="acrossClue6">6   Lead Chipmunk</td><td id="downClue3">3   Wedding birds</td>
+                <td id="acrossClues3">6   Lead Chipmunk</td><td id="downClues3">3   Wedding birds</td>
             </tr>
             <tr>
-                <td id="acrossClue8">8   Mesh utensil used for straining</td><td id="downClue4">4   Grass-Type Pokemon with the ability to overgrow</td>
+                <td id="acrossClues4">8   Mesh utensil used for straining</td><td id="downClues4">4   Grass-Type Pokemon with the ability to overgrow</td>
             </tr>
             <tr>
-                <td id="acrossClue9">9   Member of musiscal group "The Internet"</td><td id="downClue7">7   Simpson neighbor</td>
+                <td id="acrossClues5">9   Member of musiscal group "The Internet"</td><td id="downClues5">7   Simpson neighbor</td>
+            </tr>
+            <tr>
+                <td id="acrossClues6"></td><td id="downClues6"></td>
             </tr>
 
             <!-- <tr>

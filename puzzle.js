@@ -1,4 +1,5 @@
 //Globals
+var archiveNumber = 0;
 var currentTextInput;
 var puzzelArrayData;
 var squaresSelected = [];
@@ -107,7 +108,6 @@ function initializeScreen(){
 				cell.style.background = "black";
 			}	
 		}
-		
 	}
 	var sizeCoefficient = String(300/(puzzelArrayData.length)) + "px";
 	var squares = document.getElementsByClassName("numberedBox");
@@ -488,6 +488,7 @@ binaryPuzzel = [
 
 //Returns Array
 function preparePuzzelArray(){
+
 	var example = [
 		['a', 'd', 'd', 's', '0'],
 		['n', 'e', 'o', 'n', '0'],
@@ -519,9 +520,16 @@ function preparePuzzelArray(){
 		['r', 'e', 'b', 'e', 'l', '0', '0'],
 		['e', 'r', 'o', 's', '0', '0', '0'],
 	];
-
-return example;
+if(archiveNumber == 0){
+	return example;
 }
+else if(archiveNumber == 1){
+	return items2;
+
+}
+}
+
+
 //Clear All Button
 function clearAllClicked(){
 	currentTextInput = '';
@@ -653,9 +661,7 @@ function highlightNumBox(downAcross){
 	var clue = downAcross.split(' ');
 	var table = document.getElementById("hintsTable"),rIndex,cIndex
 	for(i = 0; i < table.rows.length; i++){
-		console.log('I: ', i)
 		for(j = 0; j < table.rows[i].cells.length; j++){
-			console.log('J: ', j)
 			table.rows[i].cells[j].onclick = function(){
 				rIndex = this.parentElement.rowIndex
 				cIndex = this.cellIndex
@@ -1017,7 +1023,7 @@ function hideMenu(){
 
 weekDict = {
 	6 : "Sunday",
-	0 : "Monday",
+	7 : "Monday",
 	1 : "Tuesday",
 	2 : "Wednesday",
 	3 : "Thursday",
@@ -1034,9 +1040,56 @@ function setTime(){
 	var month = monthsMap[mm]
 	var yyyy = today.getFullYear();
 	var weekDay = today.getDate();
-
 	var todaysMini = weekDict[weekDay] + " Mini";
 	today = String(month + ' ' + dd + ', ' + yyyy);
 	document.getElementById("weekday").innerHTML = todaysMini;
 	document.getElementById("date").innerHTML = today;
+}
+
+
+//Archive
+function loadArchive(){
+	archiveNumber = 1;
+	clearAllClicked();
+	updateHints();
+}
+
+
+function updateHints(){
+	var board = preparePuzzelArray();
+	var clueArray = getClueArray(board);
+	var downClues = clueArray[0];
+	var acrossClues = clueArray[1];
+	var downClueslist = [0];
+	var acrossClueslist = [0];
+	console.log(downClues)
+	for (var i = 0; i < downClues.length; i++){
+		num = downClues[i];
+		if(downClueslist.includes(num)){
+			continue;
+		}
+		else{
+			downClueslist.push(num);
+		}
+	}
+	for (var i = 0; i < acrossClues.length; i++){
+		num = acrossClues[i];
+		if(acrossClueslist.includes(num)){
+			continue;
+		}
+		else{
+			acrossClueslist.push(num);
+		}
+	}
+	console.log("across", acrossClueslist, downClueslist);
+	for (i = 1; i < acrossClueslist.length; i++){
+		var acrossCLueID = "acrossClues" + String(i);
+		var downCLueID = "downClues" + String(i);
+		var acrossClueNumber = String(acrossClueslist[i])
+		var downClueNumber = String(downClueslist[i])
+		console.log(i, "across", acrossCLueID, acrossClueNumber, "down", downCLueID,  downClueNumber);
+		document.getElementById(acrossCLueID).id = ("acrossClue" + acrossClueNumber);
+		document.getElementById(downCLueID).id  = ("downClue" + downClueNumber);
+		console.log('hey')
+	}
 }
